@@ -1,0 +1,40 @@
+{% extends 'main/loyaut.html' %}
+
+{% block title %}
+    Mailing
+{% endblock %}
+
+{#{% block header %}#}
+{#    <nav class="cd-stretchy-nav">#}
+{#        <a class="cd-nav-trigger" href=""> Menu#}
+{#            <span aria-hidden="true"></span>#}
+{#        </a>#}
+{##}
+{#        <ul>#}
+{#            <li><a href="{% url 'send_message' %}" class="active"><span>Создать рассылку</span></a></li>#}
+{#            <li><a href=""><span>Настройки групп</span></a></li>#}
+{#        </ul>#}
+{##}
+{#        <span aria-hidden="true" class="stretchy-nav-bg"></span>#}
+{#    </nav>#}
+{##}
+{##}
+{##}
+{##}
+{#{% endblock %}#}
+
+{% block content %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label>Тема:
+            {{ form.theme }}
+        </label><br>
+        <label>Текст сообщения:
+            {{ form.text }} <br>
+            {{ all_id }}
+        </label><br>
+        <button name="save" type="submit" class="btn btn-success">Сохранить и отправить</button>
+        <button type="submit" class="btn btn-success">Отправить</button>
+    </form>
+{% endblock %}
