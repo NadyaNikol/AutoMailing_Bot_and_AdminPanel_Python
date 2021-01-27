@@ -12,5 +12,5 @@ class GroupsAdmin(admin.ModelAdmin):
 
 @admin.register(Messages)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'theme', 'text', 'created_at')
+    list_display = ('id', 'theme', 'text')
     # form = MessageForm

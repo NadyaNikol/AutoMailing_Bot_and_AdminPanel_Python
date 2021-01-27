@@ -14,14 +14,15 @@ class Groups(models.Model):
 
     @staticmethod
     def get_id_groups():
-        all_id = Groups.objects.values_list('id_group', flat=True)
+        # all_id = Groups.objects.values_list('id_group', flat=True)
+        all_id = Groups.objects.values('id_group', 'name')
         return all_id
 
 
 class Messages(models.Model):
     theme = models.CharField('Тема', max_length=250)
     text = models.TextField('Текст')
-    created_at = models.DateTimeField('Время отправки', auto_now_add=True)
+    # created_at = models.DateTimeField('Время отправки', auto_now_add=True)
 
     # file = models.TextField('Файл')
 

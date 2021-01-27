@@ -6,17 +6,17 @@
 {% endblock %}
 
 {% block content %}
-{#        <form method="post" class="form-entrance">#}
-{#            {% csrf_token %}#}
-{#            <label>Логин:#}
-{#                {{ form.login }}#}
-{#            </label><br>#}
-{#            <label>Пароль:#}
-{#                {{ form.password }}#}
-{#            </label><br>#}
-{##}
-{#            <button type="submit" class="btn btn-success">Войти</button>#}
-{#        </form>#}
+    {#        <form method="post" class="form-entrance">#}
+    {#            {% csrf_token %}#}
+    {#            <label>Логин:#}
+    {#                {{ form.login }}#}
+    {#            </label><br>#}
+    {#            <label>Пароль:#}
+    {#                {{ form.password }}#}
+    {#            </label><br>#}
+    {##}
+    {#            <button type="submit" class="btn btn-success">Войти</button>#}
+    {#        </form>#}
 
     <div class="limiter">
         <div class="container-login100">
@@ -24,35 +24,37 @@
                 <div class="login100-form-title"
                      style="background-image: url({% static 'main/images/bg.jpg' %});">
 					<span class="login100-form-title-1">
-						Вход в приложение
+						АВТОМАТИЧЕСКАЯ РАССЫЛКА
 					</span>
                 </div>
 
                 <form class="login100-form validate-form" method="post">
                     {% csrf_token %}
-                    <span style="color: red;">{{ error }}</span>
+                    {#                    <span style="color: red;">{{ error }}</span>#}
                     <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
 
                         <span class="label-input100">Логин</span>
-                        {#						<input class="input100" type="text" name="username" placeholder="Enter username">#}
+                        {#                        <input class="input100" type="text" name="login" placeholder="Enter username">#}
                         {{ form.login }}
                         <span class="focus-input100"></span>
                     </div>
 
                     <div class="wrap-input100 validate-input m-b-18" data-validate="Password is required">
                         <span class="label-input100">Пароль</span>
-                        {#						<input class="input100" type="password" name="pass" placeholder="Enter password">#}
+                        {#                        <input class="input100" type="password" name="password" placeholder="Enter password">#}
                         {{ form.password }}
                         <span class="focus-input100"></span>
                     </div>
 
                     <div class="flex-sb-m w-full p-b-30">
-                        <div class="contact100-form-checkbox">
-                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-                            <label class="label-checkbox100" for="ckb1">
-                                Запомнить меня
-                            </label>
-                        </div>
+                        <label class="label-checkbox100">
+                            {#                        <div class="contact100-form-checkbox">#}
+                            {#                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember_me">#}
+                            {{ form.remember_me }}
+
+                            Запомнить меня
+                        </label>
+                        {#                        </div>#}
 
                         <div>
                             <a href="#" class="txt1">
@@ -65,6 +67,7 @@
                         <button class="login100-form-btn" type="submit">
                             Войти
                         </button>
+                        {#                        <p>{{ s }}</p>#}
                     </div>
                 </form>
             </div>
@@ -72,3 +75,32 @@
     </div>
 
 {% endblock %}
+
+{# <script type="text/javascript">#}
+{#     $('#myform').submit(function(e){#}
+{#         alert("eeeee");#}
+{# var remember_checkbox_value = document.getElementsByName('remember_me')[0].checked;#}
+{# var login = document.getElementsByName('login')[0].value;#}
+{# var password = document.getElementsByName('password')[0].value;#}
+{# post_data = {login: login, password: password, is_remember_check: remember_checkbox_value};#}
+{##}
+{# $.ajax({#}
+{#        url: '',#}
+{#        type: 'POST',#}
+{#        data: post_data,#}
+{#        dataType: 'json',#}
+{#        success: function (response) {#}
+{#                if (response.status){#}
+{#                alert("User login is successful");#}
+{#                window.location.reload();#}
+{#                }#}
+{#                else{#}
+{#                alert("User login is not successful");#}
+{#                window.location.reload();#}
+{#                }#}
+{#        }#}
+{#);#}
+{#     });#}
+{##}
+{##}
+{#</script>#}

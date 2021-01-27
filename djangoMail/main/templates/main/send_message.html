@@ -1,4 +1,5 @@
 {% extends 'main/loyaut.html' %}
+{% load static %}
 
 {% block title %}
     Mailing
@@ -25,16 +26,219 @@
 
 {% block content %}
 
-    <form method="post">
+    <form method="post" class="contact_form" name="contact_form" id="contact" style=" display: flex;
+    flex-direction: row; flex-wrap: nowrap; margin: 5%;">
         {% csrf_token %}
-        <label>Тема:
-            {{ form.theme }}
-        </label><br>
-        <label>Текст сообщения:
-            {{ form.text }} <br>
-            {{ all_id }}
-        </label><br>
-        <button name="save" type="submit" class="btn btn-success">Сохранить и отправить</button>
-        <button type="submit" class="btn btn-success">Отправить</button>
+
+        <div>
+            {#        <label>Тема:#}
+            {#            {{ form.theme }}#}
+            {#        </label><br>#}
+            {#        <label>Текст сообщения:#}
+            {#            {{ form.text }} <br>#}
+            {#            {{ all_id }}#}
+            {#        </label><br>#}
+            {#        <button name="save" type="submit" class="btn btn-success">Сохранить и отправить</button>#}
+            {#        <button type="submit" class="btn btn-success">Отправить</button>#}
+            {#    </form>#}
+
+
+            {#    <form class="contact_form" method="post" name="contact_form">#}
+            {#        {% csrf_token %}#}
+            <ul>
+                {#                        <li>#}
+                {#                            <h2>Contact Us</h2>#}
+                {#                            <span class="required_notification">* Denotes Required Field</span>#}
+                {#                        </li>#}
+                <li>
+                    <label for="name">Тема:</label>
+{#                    <input type="text" placeholder="John Doe" required/>#}
+
+                     {{ form.theme }}
+                </li>
+                {#                    <li>#}
+                {#                        <label for="email">Email:</label>#}
+                {#                        <input type="email" name="email" placeholder="john_doe@example.com" required />#}
+                {#                        <span class="form_hint">Proper format "name@something.com"</span>#}
+                {#                    </li>#}
+                {#                    <li>#}
+                {#                        <label for="website">Website:</label>#}
+                {#                        <input type="url" name="website" placeholder="http://johndoe.com" required pattern="(http|https)://.+"/>#}
+                {#                        <span class="form_hint">Proper format "http://someaddress.com"</span>#}
+                {#                    </li>#}
+                <li>
+                    <label for="message">Сообщение:</label>
+{#                    <textarea name="message" cols="60" rows="6" required></textarea>#}
+                     {{ form.text }}
+                </li>
+                <li>
+                    <button class="submit" type="submit">Submit Form</button>
+{#                                        <input type="submit" class="submit" value="OK">#}
+                </li>
+            </ul>
+            {#    </form>#}
+        </div>
+
+        <div style="margin: 5%;" class="btn-group" id="group_main">
+            {#        <ol class="rounded">#}
+            {% for el in list_info %}
+                {#             <li>#}
+                {#             <a href="#">#}
+                {#                <p>{{ el.id_group }}</p>#}
+                {#                <p>{{ el.name }}</p>#}
+                {#             </a>#}
+                {#            </li>#}
+                {#                <li>#}
+                {#                    <div>#}
+                {#                        <figure class="group-list">#}
+                {#                            <p><img style="width: 7em; height: 7em;" src="{% static 'main/images/bg.jpg' %}"#}
+                {#                                    alt="Сен-Тропе">#}
+                {#                            <figcaption style="text-align: center">{{ el.name }}#}
+                {#                            </figcaption>#}
+                {#                        </figure>#}
+                {#                    </div>#}
+                {#                </li>#}
+
+                {#            <div class="group" style="font-size: 1.2em;">#}
+                {#                <img style="border-radius: 50px;" src="{% static 'main/images/pr.png' %}">#}
+                {#                <h2> <span>{{ el.name }}</span></h2>#}
+                {##}
+                {#            </div>#}
+
+                {#                <div style="position: relative; width: 200px; height: 100px">#}
+                {#                    <input type="checkbox" id="{{ el.id_group }}" name="check_group[]"/>#}
+                {#                    <div style="position: absolute; top: 0; left: 0; width: 200px">#}
+                {#                        <img src="{% static 'main/images/pr.png' %}" alt="..."/>#}
+                {#                    </div>#}
+                {#                    <div style="position: absolute; top: 40%; left: 6%; width: 200px; font-size: 1.5em; font-weight: bolder">#}
+                {#                        {{ el.name }}#}
+                {#                    </div>#}
+                {#                </div>#}
+                {#                <input type="checkbox" id="1"/>#}
+
+
+                <div style="position: relative; width: 200px; height: 100px">
+                    <button id="{{ el.id_group }}" class="btn_check_group">
+                        <div style="position: absolute; top: 0; left: 0; width: 200px">
+                            <img src="{% static 'main/images/pr.png' %}" alt="..."/>
+                        </div>
+                        <div style="position: absolute; top: 40%; left: 1%; width: 200px; font-size: 1.5em; font-weight: bolder">
+                            {{ el.name }}
+                        </div>
+                    </button>
+                </div>
+
+
+            {% endfor %}
+
+        </div>
+
     </form>
+    {#        </ol>#}
+
+    {#    import collections#}
+    {#Foo = collections.namedtuple('Foo', ['id', 'created_date', 'number_of_clicks'])#}
+    {##}
+    {#def test(request):#}
+    {#    # check if form data is posted#}
+    {#    if request.method == 'POST':#}
+    {#        # simply return a string that shows the IDs of selected items#}
+    {#        return http.HttpResponse('<br />'.join(request.POST.getlist('choices')))#}
+    {##}
+    {#    else:#}
+    {#        items = [Foo(1,1,1),#}
+    {#                 Foo(2,2,2),#}
+    {#                 Foo(3,3,3)]#}
+    {##}
+    {#        t = loader.get_template('test.html')#}
+    {#        c = RequestContext(request, {#}
+    {#            'list': items,#}
+    {#            'host': 'me.com',#}
+    {#            })#}
+    {##}
+    {#    return http.HttpResponse(t.render(c))#}
+
+{% endblock %}
+
+
+{% block javascript %}
+
+    <script>
+
+        var selected_groups = [];
+
+        {#$(document).ready(function () {#}
+
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        });
+
+
+        $("#contact").submit(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            {#$(this).reportValidity()#}
+
+            alert("this is submit");
+
+            const data = $('form').serializeArray();
+            data['selected_groups'] = selected_groups;
+            $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:8000/main/',
+                data: {'data': data},
+                dataType: 'json',
+            });
+
+        });
+
+        {#for (var i = 0; i < btn.length; i++) {#}
+        {#    btn[i].onclick = function () {#}
+        {#alert(this.id)#}
+        {##}
+        {#        var img = $(this).find('img');#}
+        {##}
+        {#        if (img.attr('src') === '/static/main/images/pr.png') {#}
+        {#            img.attr('src', '/static/main/images/G41.png');#}
+        {#            selected_groups.push(this.id);#}
+        {#        } else {#}
+        {#            img.attr('src', '/static/main/images/pr.png');#}
+        {#            const index = selected_groups.indexOf(this.id);#}
+        {#            if (index > -1) {#}
+        {#                selected_groups.splice(index, 1);#}
+        {#            }#}
+        {##}
+        {#        }#}
+        {##}
+        {#var img = this.getElementsByTagName('img');#}
+        {##}
+        {#if(img.attr('src')=="{% static 'main/images/pr.png' %}")#}
+        {#    alert(img);#}
+        {##}
+        {#if (!(selected_groups.indexOf(this.id) !== -1))#}
+        {#    selected_groups.push(this.id);#}
+        {#alert(selected_groups);#}
+        {#    };#}
+
+
+        $('#group_main').on('click', 'button', function(event) {
+            event.preventDefault();
+            const img = $(this).find('img');
+
+            if (img.attr('src') === '/static/main/images/pr.png') {
+                img.attr('src', '/static/main/images/G41.png');
+                selected_groups.push(this.id);
+            } else {
+                img.attr('src', '/static/main/images/pr.png');
+                const index = selected_groups.indexOf(this.id);
+                if (index > -1) {
+                    selected_groups.splice(index, 1);
+                }
+            }
+        });
+
+
+    </script>
+
 {% endblock %}
