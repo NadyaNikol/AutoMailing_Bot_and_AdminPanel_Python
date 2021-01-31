@@ -18,10 +18,19 @@ class Groups(models.Model):
         all_id = Groups.objects.values('id_group', 'name')
         return all_id
 
+    @staticmethod
+    def delete_recording(id_gr):
+        return Groups.objects.filter(id_group=id_gr).delete()
+
+    @staticmethod
+    def save_recording(id_gr, name):
+        new_gr = Groups(id_group=id_gr, name=name)
+        return new_gr.save()
 
 class Messages(models.Model):
     theme = models.CharField('Тема', max_length=250)
-    text = models.TextField('Текст')
+    text = models.TextField('Сообщение')
+
     # created_at = models.DateTimeField('Время отправки', auto_now_add=True)
 
     # file = models.TextField('Файл')

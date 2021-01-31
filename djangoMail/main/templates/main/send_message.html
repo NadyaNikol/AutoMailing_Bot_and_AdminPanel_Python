@@ -1,6 +1,7 @@
 {% extends 'main/loyaut.html' %}
 {% load static %}
 
+
 {% block title %}
     Mailing
 {% endblock %}
@@ -29,8 +30,8 @@
     <form method="post" class="contact_form" name="contact_form" id="contact" style=" display: flex;
     flex-direction: row; flex-wrap: nowrap; margin: 5%;">
         {% csrf_token %}
-
-        <div>
+        {{ form.non_field_errors }}
+        <div style="width: 60%;">
             {#        <label>Тема:#}
             {#            {{ form.theme }}#}
             {#        </label><br>#}
@@ -51,10 +52,11 @@
                 {#                            <span class="required_notification">* Denotes Required Field</span>#}
                 {#                        </li>#}
                 <li>
-                    <label for="name">Тема:</label>
-{#                    <input type="text" placeholder="John Doe" required/>#}
-
-                     {{ form.theme }}
+                    {#                    <label for="name">Тема:</label>#}
+                    {#                    <input type="text" placeholder="John Doe" required/>#}
+                    {{ form.theme.label_tag }}
+                    {{ form.theme }}
+                    {#                    {{ form.theme.errors }}#}
                 </li>
                 {#                    <li>#}
                 {#                        <label for="email">Email:</label>#}
@@ -67,19 +69,21 @@
                 {#                        <span class="form_hint">Proper format "http://someaddress.com"</span>#}
                 {#                    </li>#}
                 <li>
-                    <label for="message">Сообщение:</label>
-{#                    <textarea name="message" cols="60" rows="6" required></textarea>#}
-                     {{ form.text }}
+                    {#                    <label for="message">Сообщение:</label>#}
+                    {{ form.text.label_tag }}
+                    {#                    <textarea name="message" cols="60" rows="6" required></textarea>#}
+                    {{ form.text }}
+                    {#                    {{ form.text.errors }}#}
                 </li>
                 <li>
                     <button class="submit" type="submit">Submit Form</button>
-{#                                        <input type="submit" class="submit" value="OK">#}
+                    {#                                        <input type="submit" class="submit" value="OK">#}
                 </li>
             </ul>
             {#    </form>#}
         </div>
 
-        <div style="margin: 5%;" class="btn-group" id="group_main">
+        <div style=" width: 40%;" class="btn-group" id="group_main">
             {#        <ol class="rounded">#}
             {% for el in list_info %}
                 {#             <li>#}
@@ -117,20 +121,24 @@
                 {#                <input type="checkbox" id="1"/>#}
 
 
-                <div style="position: relative; width: 200px; height: 100px">
-                    <button id="{{ el.id_group }}" class="btn_check_group">
-                        <div style="position: absolute; top: 0; left: 0; width: 200px">
+                <div style="position: relative;height: 100px; float: left;">
+                    <button name="{{ el.id_group }}" class="btn_check_group">
+                        <div style="position: absolute; top: 0; left: 0; width: 100px;">
                             <img src="{% static 'main/images/pr.png' %}" alt="..."/>
                         </div>
-                        <div style="position: absolute; top: 40%; left: 1%; width: 200px; font-size: 1.5em; font-weight: bolder">
+                        <div id="{{ el.id_group }}"
+                             style="position: absolute; top: 40%; left: 1%; width: 100px; font-size: 1.5em; font-weight: bolder">
                             {{ el.name }}
                         </div>
                     </button>
+
+
                 </div>
 
 
             {% endfor %}
 
+            <button class="btn btn-success" id="update_groups"> Обновить группы</button>
         </div>
 
     </form>
@@ -165,79 +173,132 @@
 
     <script>
 
-        var selected_groups = [];
+        $(document).ready(function () {
+            var selected_groups = [];
 
-        {#$(document).ready(function () {#}
+            {#$(document).ready(function () {#}
 
-        $.ajaxSetup({
-            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
-        });
+            {#$.ajaxSetup({#}
+            {#    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},#}
 
 
-        $("#contact").submit(function (e) {
-            e.preventDefault();
-            e.stopPropagation();
 
-            {#$(this).reportValidity()#}
+            $("#contact").submit(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-            alert("this is submit");
+                $(this).reportValidity()
 
-            const data = $('form').serializeArray();
-            data['selected_groups'] = selected_groups;
-            $.ajax({
-                type: 'POST',
-                url: 'http://127.0.0.1:8000/main/',
-                data: {'data': data},
-                dataType: 'json',
+                alert("this is submit");
+
+                const data = $('#contact').serializeArray();
+                $.ajax({
+                    type: 'POST',
+                    {#url: 'http://127.0.0.1:8000/main/',#}
+                    url: '{% url 'send_message' %}',
+                    data: {'data': data, 'selected_groups': selected_groups},
+                    dataType: 'json',
+                });
             });
 
-        });
+            $("#update_groups").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://api.telegram.org/bot1488506326:AAFBL957KpiPMCoDzyuo-u6aDlDeX6JyDMY/getUpdates',
+                    {#dataType: "JSON",#}
+                    success: function (data) {
+                        {#отправляем данные формы вместе с обновлением страницы (данные введенные не потеряются)#}
+                        const form = $('#contact').serializeArray();
 
-        {#for (var i = 0; i < btn.length; i++) {#}
-        {#    btn[i].onclick = function () {#}
-        {#alert(this.id)#}
-        {##}
-        {#        var img = $(this).find('img');#}
-        {##}
-        {#        if (img.attr('src') === '/static/main/images/pr.png') {#}
-        {#            img.attr('src', '/static/main/images/G41.png');#}
-        {#            selected_groups.push(this.id);#}
-        {#        } else {#}
-        {#            img.attr('src', '/static/main/images/pr.png');#}
-        {#            const index = selected_groups.indexOf(this.id);#}
-        {#            if (index > -1) {#}
-        {#                selected_groups.splice(index, 1);#}
-        {#            }#}
-        {##}
-        {#        }#}
-        {##}
-        {#var img = this.getElementsByTagName('img');#}
-        {##}
-        {#if(img.attr('src')=="{% static 'main/images/pr.png' %}")#}
-        {#    alert(img);#}
-        {##}
-        {#if (!(selected_groups.indexOf(this.id) !== -1))#}
-        {#    selected_groups.push(this.id);#}
-        {#alert(selected_groups);#}
-        {#    };#}
+                        $.ajax({
+                            type: 'POST',
+                            {#url: 'http://127.0.0.1:8000/main/',#}
+                            url: '{% url 'send_message' %}',
+                            {#dataType: 'text',#}
+                            {#cache: false,#}
+                            datatype: "JSON",
+                            {#data:data,#}
+                            data: {'data':JSON.stringify(data), 'form':form, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                            {#csrfmiddlewaretoken: '{{ csrf_token }}',#}
+                            success: function (data) {
+                                alert('ssss');
+                               window.location = window.location.href;
+                                {#window.location.assign(document.URL);#}
+                                {#alert(data['list_info'][0]['id_group'])#}
+                                {#var group_div = document.getElementById('group_main')#}
+                                {#group_div.innerHTML = ''#}
+                                {#data['list_info'].forEach(#}
+                                {#el=> document.getElementById(el['id_group']).innerHTML = el['name']#}
+                                {#el=> alert(el['id_group'])#}
+                                {#el => function (el) {#}
+                                {#    alert(el)#}
+                                {#group_div.append(#}
+                                {#    '<div style="position: relative;height: 100px; float: left;">' +#}
+                                {#    '<button name="' + el['id_group'] + '" class="btn_check_group">' +#}
+                                {#    '<div style="position: absolute; top: 0; left: 0; width: 100px;">' +#}
+                                {#    '<img src="/static/main/images/pr.png" alt="..."/>' +#}
+                                {#    '</div>' +#}
+                                {#    '<div id="' + el['id_group'] + '"' +#}
+                                {#    'style="position: absolute; top: 40%; left: 1%; width: 100px; font-size: 1.5em; font-weight: bolder">' +#}
+                                {#    'el["name"]' +#}
+                                {#    '</div>' +#}
+                                {#    '</button>' +#}
+                                {#    '</div>')#}
+                                {#document.getElementById(el['id_group']).innerHTML = el['name']#}
+
+                            }
+
+                        });
+                    }
+                });
+            })
 
 
-        $('#group_main').on('click', 'button', function(event) {
-            event.preventDefault();
-            const img = $(this).find('img');
+            {#for (var i = 0; i < btn.length; i++) {#}
+            {#    btn[i].onclick = function () {#}
+            {#alert(this.id)#}
+            {##}
+            {#        var img = $(this).find('img');#}
+            {##}
+            {#        if (img.attr('src') === '/static/main/images/pr.png') {#}
+            {#            img.attr('src', '/static/main/images/G41.png');#}
+            {#            selected_groups.push(this.id);#}
+            {#        } else {#}
+            {#            img.attr('src', '/static/main/images/pr.png');#}
+            {#            const index = selected_groups.indexOf(this.id);#}
+            {#            if (index > -1) {#}
+            {#                selected_groups.splice(index, 1);#}
+            {#            }#}
+            {##}
+            {#        }#}
+            {##}
+            {#var img = this.getElementsByTagName('img');#}
+            {##}
+            {#if(img.attr('src')=="{% static 'main/images/pr.png' %}")#}
+            {#    alert(img);#}
+            {##}
+            {#if (!(selected_groups.indexOf(this.id) !== -1))#}
+            {#    selected_groups.push(this.id);#}
+            {#alert(selected_groups);#}
+            {#    };#}
 
-            if (img.attr('src') === '/static/main/images/pr.png') {
-                img.attr('src', '/static/main/images/G41.png');
-                selected_groups.push(this.id);
-            } else {
-                img.attr('src', '/static/main/images/pr.png');
-                const index = selected_groups.indexOf(this.id);
-                if (index > -1) {
-                    selected_groups.splice(index, 1);
+
+            $('#group_main').on('click', 'button', function (event) {
+                event.preventDefault();
+                const img = $(this).find('img');
+
+                if (img.attr('src') === '/static/main/images/pr.png') {
+                    img.attr('src', '/static/main/images/G41.png');
+                    selected_groups.push(this.id);
+                } else {
+                    img.attr('src', '/static/main/images/pr.png');
+                    const index = selected_groups.indexOf(this.id);
+                    if (index > -1) {
+                        selected_groups.splice(index, 1);
+                    }
                 }
-            }
+            });
         });
-
 
     </script>
 
