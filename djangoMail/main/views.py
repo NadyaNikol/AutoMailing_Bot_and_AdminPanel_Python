@@ -13,53 +13,17 @@ import json
 def send_message(request):
     all_info = Groups.get_id_groups()
     list_info = list(all_info)
-    if request.method == 'POST' and request.is_ajax():
-        req = request.POST
-        update_groups = json.loads(req['data'])
-        form = MessageForm(req)
+    if request.method == 'POST':
 
-        if update_groups['result'] is not None:
-            for group in update_groups['result']:
-                js_id = group['message']['chat']['id']
-
-                if 'left_chat_participant' in group['message']:
-                    Groups.delete_recording(js_id)
-
-                elif js_id is not None and js_id not in list_info:
-                    js_name = group['message']['chat']['title']
-                    Groups.save_recording(js_id, js_name)
-
-        # type = ret['type']
-        # list1 = json.loads(ret['data'])
-        # form = request.POST
-        # i = 0
-        # while True:
-        #     if 'result[' + str(i) + '][message][chat][id]' in form:
-        #         js_id = json.loads(form['result[' + str(i) + '][message][chat][id]'])
-        #
-        #         if 'result[' + str(i) + '][message][left_chat_participant][id]' in form:
-        #             Groups.delete_recording(js_id)
-        #
-        #         elif js_id is not None and js_id not in list_info:
-        #             js_name = form['result[' + str(i) + '][message][chat][title]']
-        #             Groups.save_recording(js_id, js_name)
-        #
-        #         i += 1
-        #     else:
-        #         break
-
-        # data = {
-        #     'list_info': list_info,
-        # }
-        # return JsonResponse(data)
         all_info = Groups.get_id_groups()
         list_info = list(all_info)
 
         data = {
-            'form': form,
+            # 'form': form,
             'list_info': list_info,
         }
-        return JsonResponse(data)
+        # return JsonResponse(data)
+        return render(request, 'main/send_message.html', data)
 
         # form = json.loads(request.POST['result[0][message][chat][id]'])
         # update_groups = request.POST['update_groups']
@@ -103,6 +67,7 @@ def send_message(request):
     }
     return render(request, 'main/send_message.html', data)
 
+
 # def update_groups(request):
 #     if request.method == 'POST':
 #         form = GroupsForm(request.POST)
@@ -116,3 +81,58 @@ def send_message(request):
 #         'form': form,
 #     }
 #     return render(request, 'main/send_message.html', data)
+
+def is_unique_id(list_group, id_group):
+    for el in list_group:
+        if el['id_group'] == id_group:
+            return False
+    return True
+
+
+def show_groups(request):
+    all_info = Groups.get_id_groups()
+    list_info = list(all_info)
+    if request.method == 'POST' and request.is_ajax():
+
+        req = request.POST
+        update_groups = json.loads(req['data'])
+
+        if update_groups['result'] is not None:
+            for group in update_groups['result']:
+                js_id = group['message']['chat']['id']
+
+                if 'left_chat_participant' in group['message']:
+                    Groups.delete_recording(js_id)
+
+                elif js_id is not None:
+                    if is_unique_id(list_info, js_id):
+                        js_name = group['message']['chat']['title']
+                        Groups.save_recording(js_id, js_name)
+
+    return render(request, 'main/groups.html', {'list_info': list_info})
+    # return JsonResponse({
+    #     'list_info': 'ok'})
+
+# type = ret['type']
+# list1 = json.loads(ret['data'])
+# form = request.POST
+# i = 0
+# while True:
+#     if 'result[' + str(i) + '][message][chat][id]' in form:
+#         js_id = json.loads(form['result[' + str(i) + '][message][chat][id]'])
+#
+#         if 'result[' + str(i) + '][message][left_chat_participant][id]' in form:
+#             Groups.delete_recording(js_id)
+#
+#         elif js_id is not None and js_id not in list_info:
+#             js_name = form['result[' + str(i) + '][message][chat][title]']
+#             Groups.save_recording(js_id, js_name)
+#
+#         i += 1
+#     else:
+#         break
+
+# data = {
+#     'list_info': list_info,
+# }
+# return JsonResponse(data)

@@ -84,62 +84,13 @@
         </div>
 
         <div style=" width: 40%;" class="btn-group" id="group_main">
-            {#        <ol class="rounded">#}
-            {% for el in list_info %}
-                {#             <li>#}
-                {#             <a href="#">#}
-                {#                <p>{{ el.id_group }}</p>#}
-                {#                <p>{{ el.name }}</p>#}
-                {#             </a>#}
-                {#            </li>#}
-                {#                <li>#}
-                {#                    <div>#}
-                {#                        <figure class="group-list">#}
-                {#                            <p><img style="width: 7em; height: 7em;" src="{% static 'main/images/bg.jpg' %}"#}
-                {#                                    alt="Сен-Тропе">#}
-                {#                            <figcaption style="text-align: center">{{ el.name }}#}
-                {#                            </figcaption>#}
-                {#                        </figure>#}
-                {#                    </div>#}
-                {#                </li>#}
 
-                {#            <div class="group" style="font-size: 1.2em;">#}
-                {#                <img style="border-radius: 50px;" src="{% static 'main/images/pr.png' %}">#}
-                {#                <h2> <span>{{ el.name }}</span></h2>#}
-                {##}
-                {#            </div>#}
-
-                {#                <div style="position: relative; width: 200px; height: 100px">#}
-                {#                    <input type="checkbox" id="{{ el.id_group }}" name="check_group[]"/>#}
-                {#                    <div style="position: absolute; top: 0; left: 0; width: 200px">#}
-                {#                        <img src="{% static 'main/images/pr.png' %}" alt="..."/>#}
-                {#                    </div>#}
-                {#                    <div style="position: absolute; top: 40%; left: 6%; width: 200px; font-size: 1.5em; font-weight: bolder">#}
-                {#                        {{ el.name }}#}
-                {#                    </div>#}
-                {#                </div>#}
-                {#                <input type="checkbox" id="1"/>#}
+            {% include 'main/groups.html' %}
 
 
-                <div style="position: relative;height: 100px; float: left;">
-                    <button name="{{ el.id_group }}" class="btn_check_group">
-                        <div style="position: absolute; top: 0; left: 0; width: 100px;">
-                            <img src="{% static 'main/images/pr.png' %}" alt="..."/>
-                        </div>
-                        <div id="{{ el.id_group }}"
-                             style="position: absolute; top: 40%; left: 1%; width: 100px; font-size: 1.5em; font-weight: bolder">
-                            {{ el.name }}
-                        </div>
-                    </button>
-
-
-                </div>
-
-
-            {% endfor %}
-
-            <button class="btn btn-success" id="update_groups"> Обновить группы</button>
         </div>
+
+    <button class="btn btn-success" id="update_groups"> Обновить группы</button>
 
     </form>
     {#        </ol>#}
@@ -182,12 +133,11 @@
             {#    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},#}
 
 
-
             $("#contact").submit(function (e) {
                 e.preventDefault();
-                e.stopPropagation();
+                {#e.stopPropagation();#}
 
-                $(this).reportValidity()
+                {#$(this).reportValidity()#}
 
                 alert("this is submit");
 
@@ -201,28 +151,38 @@
                 });
             });
 
-            $("#update_groups").click(function () {
+            $("#update_groups").click(function (e) {
+                e.preventDefault();
+                {#e.stopPropagation();#}
                 $.ajax({
                     type: 'POST',
                     url: 'https://api.telegram.org/bot1488506326:AAFBL957KpiPMCoDzyuo-u6aDlDeX6JyDMY/getUpdates',
                     {#dataType: "JSON",#}
                     success: function (data) {
                         {#отправляем данные формы вместе с обновлением страницы (данные введенные не потеряются)#}
-                        const form = $('#contact').serializeArray();
+                        {#const form = $('#contact').serializeArray();#}
+
+                        {#$('#group_main').html('').load(#}
+                        {#            "{% url 'show_groups' %}");#}
 
                         $.ajax({
                             type: 'POST',
                             {#url: 'http://127.0.0.1:8000/main/',#}
-                            url: '{% url 'send_message' %}',
+                            url: '{% url 'show_groups' %}',
                             {#dataType: 'text',#}
                             {#cache: false,#}
                             datatype: "JSON",
                             {#data:data,#}
-                            data: {'data':JSON.stringify(data), 'form':form, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                            data: {'data': JSON.stringify(data), csrfmiddlewaretoken: '{{ csrf_token }}'},
                             {#csrfmiddlewaretoken: '{{ csrf_token }}',#}
                             success: function (data) {
-                                alert('ssss');
-                               window.location = window.location.href;
+
+                                {#history.pushState(null, null, '{% url 'send_message' %}');#}
+                                {#$('#group_main').reload();#}
+                                $('#group_main').html('').load(
+                                    "{% url 'show_groups' %}");
+                                {#alert('ssss');#}
+                                {#window.location = window.location.href;#}
                                 {#window.location.assign(document.URL);#}
                                 {#alert(data['list_info'][0]['id_group'])#}
                                 {#var group_div = document.getElementById('group_main')#}
