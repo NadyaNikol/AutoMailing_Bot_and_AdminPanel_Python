@@ -82,16 +82,7 @@ def send_message(request):
 #     }
 #     return render(request, 'main/send_message.html', data)
 
-def is_unique_id(list_group, id_group):
-    for el in list_group:
-        if el['id_group'] == id_group:
-            return False
-    return True
-
-
 def show_groups(request):
-    all_info = Groups.get_id_groups()
-    list_info = list(all_info)
     if request.method == 'POST' and request.is_ajax():
 
         req = request.POST
@@ -105,10 +96,11 @@ def show_groups(request):
                     Groups.delete_recording(js_id)
 
                 elif js_id is not None:
-                    if is_unique_id(list_info, js_id):
-                        js_name = group['message']['chat']['title']
-                        Groups.save_recording(js_id, js_name)
+                    js_name = group['message']['chat']['title']
+                    Groups.save_recording(js_id, js_name)
 
+    all_info = Groups.get_id_groups()
+    list_info = list(all_info)
     return render(request, 'main/groups.html', {'list_info': list_info})
     # return JsonResponse({
     #     'list_info': 'ok'})

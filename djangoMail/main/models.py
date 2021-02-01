@@ -1,8 +1,9 @@
 from django.db import models
-
+from django.core.exceptions import ObjectDoesNotExist, ValidationError, MultipleObjectsReturned
+from django.db import IntegrityError
 
 class Groups(models.Model):
-    id_group = models.IntegerField()
+    id_group = models.IntegerField(unique=True)
     name = models.CharField('Название группы', max_length=50)
 
     def __str__(self):
@@ -20,12 +21,23 @@ class Groups(models.Model):
 
     @staticmethod
     def delete_recording(id_gr):
-        return Groups.objects.filter(id_group=id_gr).delete()
+        try:
+            Groups.objects.filter(id_group=id_gr).delete()
+        except ObjectDoesNotExist:
+            pass
+        except MultipleObjectsReturned:
+            pass
 
     @staticmethod
     def save_recording(id_gr, name):
-        new_gr = Groups(id_group=id_gr, name=name)
-        return new_gr.save()
+        try:
+            new_gr = Groups(id_group=id_gr, name=name)
+            new_gr.save()
+        except IntegrityError:
+            pass
+        except ValidationError:
+            pass
+
 
 class Messages(models.Model):
     theme = models.CharField('Тема', max_length=250)
