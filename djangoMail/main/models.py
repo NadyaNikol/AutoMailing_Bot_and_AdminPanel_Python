@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError, MultipleObjectsReturned
 from django.db import IntegrityError
 
+
 class Groups(models.Model):
     id_group = models.IntegerField(unique=True)
     name = models.CharField('Название группы', max_length=50)
@@ -15,9 +16,12 @@ class Groups(models.Model):
 
     @staticmethod
     def get_id_groups():
-        # all_id = Groups.objects.values_list('id_group', flat=True)
-        all_id = Groups.objects.values('id_group', 'name')
-        return all_id
+        try:
+            # all_id = Groups.objects.values_list('id_group', flat=True)
+            all_id = Groups.objects.values('id_group', 'name')
+            return all_id
+        except ObjectDoesNotExist:
+            return None
 
     @staticmethod
     def delete_recording(id_gr):
@@ -34,8 +38,6 @@ class Groups(models.Model):
             new_gr = Groups(id_group=id_gr, name=name)
             new_gr.save()
         except IntegrityError:
-            pass
-        except ValidationError:
             pass
 
 

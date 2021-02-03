@@ -37,11 +37,11 @@
 
 
                 <div style="position: relative;height: 100px; float: left;">
-                    <button name="{{ el.id_group }}" class="btn_check_group">
+                    <button id="{{ el.id_group }}" class="btn_check_group">
                         <div style="position: absolute; top: 0; left: 0; width: 100px;">
                             <img src="{% static 'main/images/pr.png' %}" alt="..."/>
                         </div>
-                        <div id="{{ el.id_group }}"
+                        <div
                              style="position: absolute; top: 40%; left: 1%; width: 100px; font-size: 1.5em; font-weight: bolder">
                             {{ el.name }}
                         </div>

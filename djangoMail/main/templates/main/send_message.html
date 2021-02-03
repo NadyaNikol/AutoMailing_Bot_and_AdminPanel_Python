@@ -27,10 +27,11 @@
 
 {% block content %}
 
-    <form method="post" class="contact_form" name="contact_form" id="contact" style=" display: flex;
+    <form method="post" enctype="multipart/form-data" class="contact_form" name="contact_form"
+          id="contact" action="." style=" display: flex;
     flex-direction: row; flex-wrap: nowrap; margin: 5%;">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
+        {#        {% csrf_token %}#}
+        {#        {{ form.non_field_errors }}#}
         <div style="width: 60%;">
             {#        <label>Тема:#}
             {#            {{ form.theme }}#}
@@ -90,7 +91,7 @@
 
         </div>
 
-    <button class="btn btn-success" id="update_groups"> Обновить группы</button>
+        <button class="btn btn-success" id="update_groups"> Обновить группы</button>
 
     </form>
     {#        </ol>#}
@@ -135,19 +136,33 @@
 
             $("#contact").submit(function (e) {
                 e.preventDefault();
+                e.stopPropagation();
                 {#e.stopPropagation();#}
 
                 {#$(this).reportValidity()#}
 
-                alert("this is submit");
-
-                const data = $('#contact').serializeArray();
+                {#alert("this is submit");#}
+                var form = $(this).serializeArray();
+                form = JSON.stringify(form);
                 $.ajax({
-                    type: 'POST',
+                    type: $(this).attr('method'),
                     {#url: 'http://127.0.0.1:8000/main/',#}
-                    url: '{% url 'send_message' %}',
-                    data: {'data': data, 'selected_groups': selected_groups},
-                    dataType: 'json',
+                    {#url: '{% url 'send_message' %}',#}
+                    url: $(this).attr('action'),
+                    data_type:'JSON',
+                    data: {
+                        'data_form': form,
+                        'selected_groups': JSON.stringify(selected_groups),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.result === 'ok') {
+                            alert('Рассылка успешно завершена');
+                            location.reload();
+                        }
+                        else
+                            alert('Произошла ошибка. Рассылка не была совершена. Повторите попытку')
+                    }
                 });
             });
 
@@ -247,6 +262,7 @@
                 event.preventDefault();
                 const img = $(this).find('img');
 
+
                 if (img.attr('src') === '/static/main/images/pr.png') {
                     img.attr('src', '/static/main/images/G41.png');
                     selected_groups.push(this.id);
@@ -257,6 +273,7 @@
                         selected_groups.splice(index, 1);
                     }
                 }
+                {#alert(selected_groups);#}
             });
         });
 

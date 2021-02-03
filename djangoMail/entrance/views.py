@@ -77,13 +77,14 @@ def entrance(request):
                 # request.session['login'] = request.POST['login']
                 # request.session['password'] = request.POST['password']
                 #
-                password = form.data['password']
-                login = form.data['login']
-                remember_me = form.data['remember_me'] if form.data.get('remember_me') else False
+                fd = form.data
+                password = fd['password']
+                login = fd['login']
+                remember_me = fd['remember_me'] if fd.get('remember_me') else False
                 user = UsersMailing.objects.get(password=password, login=login)
 
                 if user:
-                    if not form.data.get('remember_me'):
+                    if not fd.get('remember_me'):
                         request.session.set_expiry(-1209600)
                         request.session.modified = True
                         # request.session['remember_me'] = remember_me
@@ -108,6 +109,14 @@ def entrance(request):
             error = 'Логин или пароль введены не верно'
         except MultipleObjectsReturned:
             error = 'Логин или пароль введены не верно'
+        finally:
+            form = EntranceForm()
+            data = {
+                'form': form,
+                'error': error
+                # 's': request.session
+            }
+            return render(request, 'entrance/index.html', data)
 
     else:
         form = EntranceForm()
@@ -115,9 +124,10 @@ def entrance(request):
         request.session.set_test_cookie()
 
         if request.session.has_key('password') and request.session.has_key('login'):
-            login = request.session['login']
-            password = request.session['password']
-            remember_me = request.session['remember_me']
+            rs = request.session
+            login = rs['login']
+            password = rs['password']
+            remember_me = rs['remember_me']
             # context_dict = {'password': password}
             form = EntranceForm(initial={'login': login, 'password': password, 'remember_me': remember_me})
             data = {

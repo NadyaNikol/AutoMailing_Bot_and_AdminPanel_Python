@@ -8,22 +8,59 @@ from django.conf import settings
 import time
 import cgitb
 import json
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+
 
 
 def send_message(request):
     all_info = Groups.get_id_groups()
+    if all_info is None: all_info = []
+
     list_info = list(all_info)
+
     if request.method == 'POST':
 
-        all_info = Groups.get_id_groups()
-        list_info = list(all_info)
+        # all_info = Groups.get_id_groups()
+        # list_info = list(all_info)
+        post = request.POST
+        # form_data = post['data_form']
+        form_data = json.loads(post['data_form'])
+        theme = form_data[0]['value']
+        text = form_data[1]['value']
 
-        data = {
-            # 'form': form,
-            'list_info': list_info,
-        }
-        # return JsonResponse(data)
-        return render(request, 'main/send_message.html', data)
+        if theme is not "" and text is not "":
+            form = MessageForm(initial={'theme': theme, 'text': text})
+            # form.save()
+        selected_groups = json.loads(post['selected_groups'])
+        # map(int, selected_groups)
+        # selected_groups = map(int, selected_groups)
+        # selected_groups = [int(numeric_string) for numeric_string in selected_groups]
+        # try:
+        #     if form.is_valid():
+        # fd = form.data
+        # s = fd['theme']
+        # d = fd['text']
+        bot = Bot(token=settings.TOKEN)
+        for el in selected_groups:
+            bot.send_message(el, "*" + theme + "*\n" + text,
+                             parse_mode='Markdown')
+            time.sleep(1)
+        # return redirect('send_message')
+        return JsonResponse({'result': 'ok'})
+
+        # fd = form.data
+        # data = {
+        #     # 'form': form,
+        #     'list_info': list_info,
+        # }
+        # # return JsonResponse(data)
+        # return render(request, 'main/send_message.html', data)
+
+        # except ObjectDoesNotExist:
+        #     error = 'Логин или пароль введены не верно'
+        # except MultipleObjectsReturned:
+        #     error = 'Логин или пароль введены не верно'
+
 
         # form = json.loads(request.POST['result[0][message][chat][id]'])
         # update_groups = request.POST['update_groups']
@@ -33,34 +70,33 @@ def send_message(request):
         # result = json.load(form)
         # s = result['result']
 
-        try:
+        # try:
             # if form.is_valid():
             # save = request.POST['save']
             # if save is not None:
-            a = form.data['theme']  # form.save()
-
-            # ss = form2.getlist('iss')
-
-            b = form.data['text']
-            sel = form.data['selected_groups']
-            # if list_info is not None:a
-            bot = Bot(token=settings.TOKEN)
-            # for el in list_info:
-            #     bot.send_message(el['id_group'], "*" + form.data['theme'] + "*\n" + form.data['text'], parse_mode='Markdown')
-            #     time.sleep(1)
-            for el in form.selected_groups:
-                bot.send_message(el, "*" + form.data['theme'] + "*\n" + form.data['text'],
-                                 parse_mode='Markdown')
-                time.sleep(1)
-            return redirect('send_message')
-            # else:
-            #     error = 'Форма не верна'
-
-        except ValidationError as e:
-            s = str(e)
+        #     a = form.data['theme']  # form.save()
+        #
+        #     # ss = form2.getlist('iss')
+        #
+        #     b = form.data['text']
+        #     sel = form.data['selected_groups']
+        #     # if list_info is not None:a
+        #     bot = Bot(token=settings.TOKEN)
+        #     # for el in list_info:
+        #     #     bot.send_message(el['id_group'], "*" + form.data['theme'] + "*\n" + form.data['text'], parse_mode='Markdown')
+        #     #     time.sleep(1)
+        #     for el in form.selected_groups:
+        #         bot.send_message(el, "*" + form.data['theme'] + "*\n" + form.data['text'],
+        #                          parse_mode='Markdown')
+        #         time.sleep(1)
+        #     return redirect('send_message')
+        #     # else:
+        #     #     error = 'Форма не верна'
+        #
+        # except ValidationError as e:
+        #     s = str(e)
 
     form = MessageForm()
-
     data = {
         'form': form,
         'list_info': list_info,
@@ -82,25 +118,46 @@ def send_message(request):
 #     }
 #     return render(request, 'main/send_message.html', data)
 
+def is_unique_id(list_group, id_group):
+    # for i, item in enumerate(list_group):
+    #     a[i] = int(item)
+    # length = len(list_group)
+    # i = 0
+    # while i < length:
+    for i, item in enumerate(list_group):
+        if id_group == item['id_group']:
+            return False, i
+    return True, -1
+
+
 def show_groups(request):
+    all_info = Groups.get_id_groups()
+    if all_info is None: all_info = []
+
+    list_info = list(all_info)
+
     if request.method == 'POST' and request.is_ajax():
 
         req = request.POST
         update_groups = json.loads(req['data'])
 
-        if update_groups['result'] is not None:
+        if update_groups is not None and 'result' in update_groups:
             for group in update_groups['result']:
-                js_id = group['message']['chat']['id']
+                if 'id' in group['message']['chat']:
+                    js_id = group['message']['chat']['id']
+                    is_unique, index_el = is_unique_id(list_info, js_id)
 
-                if 'left_chat_participant' in group['message']:
-                    Groups.delete_recording(js_id)
+                    if 'left_chat_participant' in group['message']:
+                        if index_el is not -1:
+                            Groups.delete_recording(js_id)
+                            del list_info[index_el]
 
-                elif js_id is not None:
-                    js_name = group['message']['chat']['title']
-                    Groups.save_recording(js_id, js_name)
+                    elif js_id is not None:
+                        if is_unique:
+                            js_name = group['message']['chat']['title']
+                            Groups.save_recording(js_id, js_name)
+                            list_info.append({'id_group': js_id, 'name': js_name})
 
-    all_info = Groups.get_id_groups()
-    list_info = list(all_info)
     return render(request, 'main/groups.html', {'list_info': list_info})
     # return JsonResponse({
     #     'list_info': 'ok'})
