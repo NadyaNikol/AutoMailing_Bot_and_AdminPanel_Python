@@ -27,7 +27,7 @@
 
 {% block content %}
 
-    <form method="post" enctype="multipart/form-data" class="contact_form" name="contact_form"
+    <form method="post" class="contact_form" name="contact_form"
           id="contact" action="." style=" display: flex;
     flex-direction: row; flex-wrap: nowrap; margin: 5%;">
         {#        {% csrf_token %}#}
@@ -77,17 +77,22 @@
                     {#                    {{ form.text.errors }}#}
                 </li>
                 <li>
+                    {#                        <input type="file" style="height: 30px; width: 350px;" name="image_file" id="image_file">#}
+                    {{ form.image_file.label_tag }}
+                    {{ form.image_file }}
+
                     <button class="submit" type="submit">Submit Form</button>
                     {#                                        <input type="submit" class="submit" value="OK">#}
                 </li>
             </ul>
             {#    </form>#}
+
+
         </div>
 
         <div style=" width: 40%;" class="btn-group" id="group_main">
 
             {% include 'main/groups.html' %}
-
 
         </div>
 
@@ -133,34 +138,43 @@
             {#$.ajaxSetup({#}
             {#    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},#}
 
-
+            var formData = new FormData();
             $("#contact").submit(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                {#e.stopPropagation();#}
 
-                {#$(this).reportValidity()#}
+                {#var file = ("#id_image_file").files[0];#}
+                {# formdata.append("image", file);#}
+                {# console.log(("#id_image_file").file);#}
 
-                {#alert("this is submit");#}
                 var form = $(this).serializeArray();
                 form = JSON.stringify(form);
+
+                formData.append('image', $('#id_image_file')[0].files[0])
+                formData.append('form', form)
+                formData.append('selected_groups', JSON.stringify(selected_groups))
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
                 $.ajax({
                     type: $(this).attr('method'),
                     {#url: 'http://127.0.0.1:8000/main/',#}
                     {#url: '{% url 'send_message' %}',#}
                     url: $(this).attr('action'),
-                    data_type:'JSON',
-                    data: {
-                        'data_form': form,
-                        'selected_groups': JSON.stringify(selected_groups),
-                        csrfmiddlewaretoken: '{{ csrf_token }}'
-                    },
+                    {#data_type:'JSON',#}
+                    data:formData,
+                    {#data: {#}
+                        {#'data_form': formdata,#}
+                        {#'selected_groups': JSON.stringify(selected_groups),#}
+                        {#csrfmiddlewaretoken: '{{ csrf_token }}'#}
+
+                    processData: false,
+                    contentType: false,
+                    enctype: 'multipart/form-data',
                     success: function (data) {
                         if (data.result === 'ok') {
                             alert('Рассылка успешно завершена');
                             location.reload();
-                        }
-                        else
+                        } else
                             alert('Произошла ошибка. Рассылка не была совершена. Повторите попытку')
                     }
                 });

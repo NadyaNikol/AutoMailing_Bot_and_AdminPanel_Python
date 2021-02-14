@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError, MultipleObjectsReturned
 from django.db import IntegrityError
+from django.core.files import File
 
 
 class Groups(models.Model):
@@ -44,6 +45,7 @@ class Groups(models.Model):
 class Messages(models.Model):
     theme = models.CharField('Тема', max_length=250)
     text = models.TextField('Сообщение')
+    image_file = models.ImageField('Картинка', upload_to='images/%Y/%m/%d', default='')
 
     # created_at = models.DateTimeField('Время отправки', auto_now_add=True)
 
@@ -55,3 +57,15 @@ class Messages(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+
+    @staticmethod
+    def save_recording(theme, text, image_file):
+        try:
+            new_mess = Messages(theme=theme, text=text, image_file=image_file)
+            f = open(image_file, 'rb')
+            myfile = File(f)
+            n = myfile.name
+            new_mess.image_file.save('mmm.jpg', myfile, save=True)
+            # new_mess.save()
+        except IntegrityError:
+            pass

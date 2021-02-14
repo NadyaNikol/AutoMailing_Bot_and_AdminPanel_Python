@@ -1,11 +1,11 @@
 from .models import Messages, Groups
-from django.forms import ModelForm, TextInput, Textarea
+from django.forms import ModelForm, TextInput, Textarea, FileInput
 
 
 class MessageForm(ModelForm):
     class Meta:
         model = Messages
-        fields = ['theme', 'text']
+        fields = ['theme', 'text', 'image_file']
 
         widgets = {
             "theme": TextInput(attrs={
@@ -13,7 +13,10 @@ class MessageForm(ModelForm):
             }),
             "text": Textarea(attrs={
                 'class': 'input100',
-            })
+            }),
+            "image_file": FileInput(attrs={
+                'required': False,
+            }),
         }
 
 

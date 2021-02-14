@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     'main',
     'entrance',
+    # 'ajaximage',
 ]
 
 MIDDLEWARE = [
@@ -55,8 +56,8 @@ ROOT_URLCONF = 'djangoMail.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'entrance/templates']
-        ,
+        # 'DIRS': [BASE_DIR / 'entrance/templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,6 +100,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# STATICFILES_FINDERS = [
+#     'django.contrib.staticfiles.finders.FileSystemFinder',
+#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+# ]
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -122,7 +128,13 @@ STATICFILES_DIRS = [
     # '/var/www/static/',
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 TOKEN = '1488506326:AAFBL957KpiPMCoDzyuo-u6aDlDeX6JyDMY'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+

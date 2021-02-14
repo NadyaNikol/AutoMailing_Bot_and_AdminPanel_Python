@@ -9,7 +9,14 @@ import time
 import cgitb
 import json
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.files.storage import default_storage
+import datetime
 
+
+def handle_uploaded_file(f):
+    with open('some/file/name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
 def send_message(request):
@@ -19,19 +26,42 @@ def send_message(request):
     list_info = list(all_info)
 
     if request.method == 'POST':
+        # image = request.FILES.get('image')
+        # data_form = request.POST.get('form')
+        # selected_groups = request.POST.get('selected_groups')
+        #
+        # s = settings.MEDIA_ROOT
+        # # all_info = Groups.get_id_groups()
+        # # list_info = list(all_info)
+        # post = request.POST
+        form = MessageForm(request.POST, request.FILES)
+        form_data = form.data['form']
+        image = form.files['image']
+        selected_groups = form.data['selected_groups']
 
-        # all_info = Groups.get_id_groups()
-        # list_info = list(all_info)
-        post = request.POST
+        with default_storage.open(image.name, 'wb+') as destination:
+            for chunk in image.chunks():
+                destination.write(chunk)
+        # ss = request.FILES['file']
+
         # form_data = post['data_form']
-        form_data = json.loads(post['data_form'])
+        # file = post['file']
+        # form_data = json.loads(post['data_form'])
+        form_data = json.loads(form_data)
         theme = form_data[0]['value']
         text = form_data[1]['value']
 
-        if theme is not "" and text is not "":
-            form = MessageForm(initial={'theme': theme, 'text': text})
-            # form.save()
-        selected_groups = json.loads(post['selected_groups'])
+        Messages.save_recording(theme, text, settings.MEDIA_ROOT + "\\" + image.name)
+
+        # form = MessageForm(initial={'theme': theme, 'text': text, 'image_file': settings.MEDIA_ROOT+'/mmm.jpg'})
+        # form.save()
+        # if theme != "" and text != "":
+        #     form = MessageForm(initial={'theme': theme, 'text': text})
+        #     # form.save()
+        # # selected_groups = json.loads(post['selected_groups'])
+
+        selected_groups = json.loads(selected_groups)
+
         # map(int, selected_groups)
         # selected_groups = map(int, selected_groups)
         # selected_groups = [int(numeric_string) for numeric_string in selected_groups]
@@ -40,13 +70,15 @@ def send_message(request):
         # fd = form.data
         # s = fd['theme']
         # d = fd['text']
-        bot = Bot(token=settings.TOKEN)
-        for el in selected_groups:
-            bot.send_message(el, "*" + theme + "*\n" + text,
-                             parse_mode='Markdown')
-            time.sleep(1)
+        if selected_groups != "":
+            bot = Bot(token=settings.TOKEN)
+            for el in selected_groups:
+                bot.send_message(el, "*" + theme + "*\n" + text,
+                                 parse_mode='Markdown')
+                bot.sendPhoto(el, photo=open(settings.MEDIA_ROOT + '/'+image.name, 'rb'))
+                time.sleep(1)
         # return redirect('send_message')
-        return JsonResponse({'result': 'ok'})
+            return JsonResponse({'result': 'ok'})
 
         # fd = form.data
         # data = {
@@ -61,7 +93,6 @@ def send_message(request):
         # except MultipleObjectsReturned:
         #     error = 'Логин или пароль введены не верно'
 
-
         # form = json.loads(request.POST['result[0][message][chat][id]'])
         # update_groups = request.POST['update_groups']
         # update groups
@@ -71,9 +102,9 @@ def send_message(request):
         # s = result['result']
 
         # try:
-            # if form.is_valid():
-            # save = request.POST['save']
-            # if save is not None:
+        # if form.is_valid():
+        # save = request.POST['save']
+        # if save is not None:
         #     a = form.data['theme']  # form.save()
         #
         #     # ss = form2.getlist('iss')
