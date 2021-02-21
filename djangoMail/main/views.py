@@ -13,12 +13,6 @@ from django.core.files.storage import default_storage
 import datetime
 
 
-def handle_uploaded_file(f):
-    with open('some/file/name.txt', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
-
 def send_message(request):
     all_info = Groups.get_id_groups()
     if all_info is None: all_info = []
@@ -34,14 +28,34 @@ def send_message(request):
         # # all_info = Groups.get_id_groups()
         # # list_info = list(all_info)
         # post = request.POST
+
         form = MessageForm(request.POST, request.FILES)
-        form_data = form.data['form']
-        image = form.files['image']
         selected_groups = form.data['selected_groups']
 
-        with default_storage.open(image.name, 'wb+') as destination:
-            for chunk in image.chunks():
-                destination.write(chunk)
+        if selected_groups == '[]':
+            return JsonResponse({'result': 'Выберите группу'})
+
+        form_data = form.data['form']
+        is_save = form.data['is_save']
+        settings_root = settings.MEDIA_ROOT
+        name_file = ""
+        image = ""
+        try:
+            image = form.files['image']
+        except Exception as e:
+            print(e)
+
+        if image != "":
+            try:
+                with default_storage.open(image.name, 'wb+') as destination:
+                    for chunk in image.chunks():
+                        destination.write(chunk)
+
+                name_file = image.name
+            except IOError as e:
+                print('не удалось открыть файл')
+            except Exception as e:
+                print(e)
         # ss = request.FILES['file']
 
         # form_data = post['data_form']
@@ -51,7 +65,10 @@ def send_message(request):
         theme = form_data[0]['value']
         text = form_data[1]['value']
 
-        Messages.save_recording(theme, text, settings.MEDIA_ROOT + "\\" + image.name)
+
+
+        if is_save == "true":
+            Messages.save_recording(theme, text, settings_root, name_file)
 
         # form = MessageForm(initial={'theme': theme, 'text': text, 'image_file': settings.MEDIA_ROOT+'/mmm.jpg'})
         # form.save()
@@ -70,15 +87,28 @@ def send_message(request):
         # fd = form.data
         # s = fd['theme']
         # d = fd['text']
-        if selected_groups != "":
-            bot = Bot(token=settings.TOKEN)
-            for el in selected_groups:
-                bot.send_message(el, "*" + theme + "*\n" + text,
-                                 parse_mode='Markdown')
-                bot.sendPhoto(el, photo=open(settings.MEDIA_ROOT + '/'+image.name, 'rb'))
-                time.sleep(1)
-        # return redirect('send_message')
-            return JsonResponse({'result': 'ok'})
+        photo_send = ""
+        try:
+            photo_send = open(settings_root + '/' + image.name, 'rb')
+        except IOError as e:
+            print('не удалось открыть файл')
+        except Exception as e:
+            print(e)
+
+        try:
+            if selected_groups != "":
+                bot = Bot(token=settings.TOKEN)
+                for el in selected_groups:
+                    bot.send_message(el, "*" + theme + "*\n" + text, parse_mode='Markdown')
+
+                    if photo_send != "":
+                        bot.sendPhoto(el, photo=photo_send)
+                    time.sleep(1)
+                # return redirect('send_message')
+                return JsonResponse({'result': 'ok'})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'result': 'Произошла ошибка. Рассылка не была совершена. Повторите попытку'})
 
         # fd = form.data
         # data = {

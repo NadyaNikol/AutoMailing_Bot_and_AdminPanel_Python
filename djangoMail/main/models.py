@@ -29,9 +29,11 @@ class Groups(models.Model):
         try:
             Groups.objects.filter(id_group=id_gr).delete()
         except ObjectDoesNotExist:
-            pass
+            print('такая группа уже существует в бд')
         except MultipleObjectsReturned:
-            pass
+            print('такая группа уже существует в бд')
+        except Exception as e:
+            print(e)
 
     @staticmethod
     def save_recording(id_gr, name):
@@ -39,13 +41,15 @@ class Groups(models.Model):
             new_gr = Groups(id_group=id_gr, name=name)
             new_gr.save()
         except IntegrityError:
-            pass
+            print('не удалось записать группу в бд')
+        except Exception as e:
+            print(e)
 
 
 class Messages(models.Model):
     theme = models.CharField('Тема', max_length=250)
     text = models.TextField('Сообщение')
-    image_file = models.ImageField('Картинка', upload_to='images/%Y/%m/%d', default='')
+    image_file = models.ImageField('Картинка', upload_to='images/%Y/%m/%d', default='', blank=True, null=True)
 
     # created_at = models.DateTimeField('Время отправки', auto_now_add=True)
 
@@ -59,13 +63,18 @@ class Messages(models.Model):
         verbose_name_plural = 'Сообщения'
 
     @staticmethod
-    def save_recording(theme, text, image_file):
+    def save_recording(theme, text, settings_root, name_file=""):
         try:
-            new_mess = Messages(theme=theme, text=text, image_file=image_file)
-            f = open(image_file, 'rb')
-            myfile = File(f)
-            n = myfile.name
-            new_mess.image_file.save('mmm.jpg', myfile, save=True)
-            # new_mess.save()
+            if name_file == "":
+                new_mess = Messages(theme=theme, text=text)
+                new_mess.save()
+            else:
+                new_mess = Messages(theme=theme, text=text, image_file=name_file)
+                f = open(settings_root + "\\" + name_file, 'rb')
+                my_file = File(f)
+                new_mess.image_file.save(name_file, my_file, save=True)
+
         except IntegrityError:
-            pass
+            print('не удалось открыть файл')
+        except Exception as e:
+            print(e)

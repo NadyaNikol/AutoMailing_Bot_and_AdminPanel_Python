@@ -14,9 +14,7 @@ class MessageForm(ModelForm):
             "text": Textarea(attrs={
                 'class': 'input100',
             }),
-            "image_file": FileInput(attrs={
-                'required': False,
-            }),
+            "image_file": FileInput(),
         }
 
 

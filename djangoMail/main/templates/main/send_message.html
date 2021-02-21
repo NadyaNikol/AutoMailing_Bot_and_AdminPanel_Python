@@ -80,8 +80,9 @@
                     {#                        <input type="file" style="height: 30px; width: 350px;" name="image_file" id="image_file">#}
                     {{ form.image_file.label_tag }}
                     {{ form.image_file }}
-
-                    <button class="submit" type="submit">Submit Form</button>
+                    <p id="error_file" hidden style="color: red;">Выберите файл нужного формата</p>
+                    <input type="checkbox" id="save" value="Сохранить">
+                    <button class="submit" type="submit" id="send_message">Отправить</button>
                     {#                                        <input type="submit" class="submit" value="OK">#}
                 </li>
             </ul>
@@ -138,11 +139,31 @@
             {#$.ajaxSetup({#}
             {#    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},#}
 
+            var send_message = $('#send_message');
+            var error_file = $('#error_file');
+
+            $('#id_image_file').change(function (e) {
+                e.preventDefault();
+                var format = $(this)[0].files[0].name.split('.').pop()
+                var regex = new RegExp("(jpeg|jpg|png|svg)");
+                if (!(regex.test(format))) {
+                    send_message.attr('disabled', 'disabled');
+                    error_file.show()
+                }
+                else {
+                     send_message.attr('disabled', false)
+                     error_file.hide()
+                }
+            })
+
             var formData = new FormData();
             $("#contact").submit(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
+                var isSave = false;
+                if ($('#save').prop("checked"))
+                    isSave = true;
                 {#var file = ("#id_image_file").files[0];#}
                 {# formdata.append("image", file);#}
                 {# console.log(("#id_image_file").file);#}
@@ -150,10 +171,11 @@
                 var form = $(this).serializeArray();
                 form = JSON.stringify(form);
 
-                formData.append('image', $('#id_image_file')[0].files[0])
-                formData.append('form', form)
-                formData.append('selected_groups', JSON.stringify(selected_groups))
-                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+                formData.append('image', $('#id_image_file')[0].files[0]);
+                formData.append('form', form);
+                formData.append('selected_groups', JSON.stringify(selected_groups));
+                formData.append('is_save', isSave);
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
 
                 $.ajax({
                     type: $(this).attr('method'),
@@ -161,11 +183,11 @@
                     {#url: '{% url 'send_message' %}',#}
                     url: $(this).attr('action'),
                     {#data_type:'JSON',#}
-                    data:formData,
+                    data: formData,
                     {#data: {#}
-                        {#'data_form': formdata,#}
-                        {#'selected_groups': JSON.stringify(selected_groups),#}
-                        {#csrfmiddlewaretoken: '{{ csrf_token }}'#}
+                    {#'data_form': formdata,#}
+                    {#'selected_groups': JSON.stringify(selected_groups),#}
+                    {#csrfmiddlewaretoken: '{{ csrf_token }}'#}
 
                     processData: false,
                     contentType: false,
@@ -174,8 +196,9 @@
                         if (data.result === 'ok') {
                             alert('Рассылка успешно завершена');
                             location.reload();
-                        } else
-                            alert('Произошла ошибка. Рассылка не была совершена. Повторите попытку')
+                        } else {
+                            alert(data.result);
+                        }
                     }
                 });
             });
