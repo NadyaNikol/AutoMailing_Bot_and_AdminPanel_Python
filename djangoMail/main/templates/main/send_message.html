@@ -131,13 +131,12 @@
 {% block content %}
 
     <form method="post" name="contact_form" class="form_contact"
-          id="contact" action="." style="display: flex; justify-content: center; margin: 2%;">
-        <div style="width: 50%; align-self: center; margin-right: 10%; font-size: 15px;font-weight: bold;">
-            <div style="display: flex;">
-                <img src="{% static 'main/images/step3.jpg' %}" width="75%">
-{#                <h5>Автоматическая рассылка писем</h5>#}
-            </div>
-            <div>    {{ form.theme.label_tag }}
+          id="contact" action="." style="display: flex; justify-content: center; margin: 2% 0;">
+        <div style="width: 50%; margin-right: 3.5%; font-size: 15px; font-weight: bold;">
+            <img src="{% static 'main/images/step3.jpg' %}" width="75%">
+
+            <div>
+                {{ form.theme.label_tag }}
                 {{ form.theme }}
             </div>
             <div>
@@ -161,7 +160,7 @@
 
         </div>
 
-        <div style=" width: 25%; align-items: stretch;">
+        <div style=" width: 31.5%; margin-top: 1%;">
             <div style="height: 90%; min-height: 80%;  border-radius: 30px; border: 1px solid black;
 box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;">
                 <select class="group_type"
@@ -173,7 +172,7 @@ box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;">
 
                 {% include 'main/groups.html' %}
             </div>
-            <button class="submit" style="height: 3em; margin: 5% 20%; width: 60%;" id="update_groups">
+            <button class="submit" style=" margin: 5% 20%; width: 60%;" id="update_groups">
                 Обновить группы
             </button>
         </div>
