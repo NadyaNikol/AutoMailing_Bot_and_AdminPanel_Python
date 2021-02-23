@@ -25,106 +25,164 @@
 {##}
 {#{% endblock %}#}
 
+{#{% block content %}#}
+{##}
+{#    <form method="post" class="contact_form" name="contact_form"#}
+{#          id="contact" action="." style=" display: flex;#}
+{#    flex-direction: row; flex-wrap: nowrap; margin: 5%;">#}
+{#        {% csrf_token %}#}
+{#        {{ form.non_field_errors }}#}
+{#        <div style="width: 60%;">#}
+{#        <label>Тема:#}
+{#            {{ form.theme }}#}
+{#        </label><br>#}
+{#        <label>Текст сообщения:#}
+{#            {{ form.text }} <br>#}
+{#            {{ all_id }}#}
+{#        </label><br>#}
+{#        <button name="save" type="submit" class="btn btn-success">Сохранить и отправить</button>#}
+{#        <button type="submit" class="btn btn-success">Отправить</button>#}
+{#    </form>#}
+{##}
+{##}
+{#    <form class="contact_form" method="post" name="contact_form">#}
+{#        {% csrf_token %}#}
+{#            <ul>#}
+{#                        <li>#}
+{#                            <h2>Contact Us</h2>#}
+{#                            <span class="required_notification">* Denotes Required Field</span>#}
+{#                        </li>#}
+{#                <li>#}
+{#                    <label for="name">Тема:</label>#}
+{#                    <input type="text" placeholder="John Doe" required/>#}
+{#                    {{ form.theme.label_tag }}#}
+{#                    {{ form.theme }}#}
+{#                    {{ form.theme.errors }}#}
+{#                </li>#}
+{#                    <li>#}
+{#                        <label for="email">Email:</label>#}
+{#                        <input type="email" name="email" placeholder="john_doe@example.com" required />#}
+{#                        <span class="form_hint">Proper format "name@something.com"</span>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <label for="website">Website:</label>#}
+{#                        <input type="url" name="website" placeholder="http://johndoe.com" required pattern="(http|https)://.+"/>#}
+{#                        <span class="form_hint">Proper format "http://someaddress.com"</span>#}
+{#                    </li>#}
+{#                <li>#}
+{#                    <label for="message">Сообщение:</label>#}
+{#                    {{ form.text.label_tag }}#}
+{#                    <textarea name="message" cols="60" rows="6" required></textarea>#}
+{#                    {{ form.text }}#}
+{#                    {{ form.text.errors }}#}
+{#                </li>#}
+{#                <li>#}
+{#                        <input type="file" style="height: 30px; width: 350px;" name="image_file" id="image_file">#}
+{#                    {{ form.image_file.label_tag }}#}
+{#                    {{ form.image_file }}#}
+{#                    <p id="error_file" hidden style="color: red;">Выберите файл нужного формата</p>#}
+{#                    <input type="checkbox" id="save" value="Сохранить">#}
+{#                    <button class="submit" type="submit" id="send_message">Отправить</button>#}
+{#                                        <input type="submit" class="submit" value="OK">#}
+{#                </li>#}
+{#            </ul>#}
+{#    </form>#}
+{##}
+{##}
+{#        </div>#}
+{##}
+{#        <div style=" width: 40%;" class="btn-group" id="group_main">#}
+{##}
+{#            {% include 'main/groups.html' %}#}
+{##}
+{#        </div>#}
+{##}
+{#        <button class="btn btn-success" id="update_groups"> Обновить группы</button>#}
+{##}
+{#    </form>#}
+{#        </ol>#}
+{##}
+{#    import collections#}
+{#Foo = collections.namedtuple('Foo', ['id', 'created_date', 'number_of_clicks'])#}
+{##}
+{#def test(request):#}
+{#    # check if form data is posted#}
+{#    if request.method == 'POST':#}
+{#        # simply return a string that shows the IDs of selected items#}
+{#        return http.HttpResponse('<br />'.join(request.POST.getlist('choices')))#}
+{##}
+{#    else:#}
+{#        items = [Foo(1,1,1),#}
+{#                 Foo(2,2,2),#}
+{#                 Foo(3,3,3)]#}
+{##}
+{#        t = loader.get_template('test.html')#}
+{#        c = RequestContext(request, {#}
+{#            'list': items,#}
+{#            'host': 'me.com',#}
+{#            })#}
+{##}
+{#    return http.HttpResponse(t.render(c))#}
+{##}
+{#{% endblock %}#}
+
+
+
 {% block content %}
 
-    <form method="post" class="contact_form" name="contact_form"
-          id="contact" action="." style=" display: flex;
-    flex-direction: row; flex-wrap: nowrap; margin: 5%;">
-        {#        {% csrf_token %}#}
-        {#        {{ form.non_field_errors }}#}
-        <div style="width: 60%;">
-            {#        <label>Тема:#}
-            {#            {{ form.theme }}#}
-            {#        </label><br>#}
-            {#        <label>Текст сообщения:#}
-            {#            {{ form.text }} <br>#}
-            {#            {{ all_id }}#}
-            {#        </label><br>#}
-            {#        <button name="save" type="submit" class="btn btn-success">Сохранить и отправить</button>#}
-            {#        <button type="submit" class="btn btn-success">Отправить</button>#}
-            {#    </form>#}
-
-
-            {#    <form class="contact_form" method="post" name="contact_form">#}
-            {#        {% csrf_token %}#}
-            <ul>
-                {#                        <li>#}
-                {#                            <h2>Contact Us</h2>#}
-                {#                            <span class="required_notification">* Denotes Required Field</span>#}
-                {#                        </li>#}
-                <li>
-                    {#                    <label for="name">Тема:</label>#}
-                    {#                    <input type="text" placeholder="John Doe" required/>#}
-                    {{ form.theme.label_tag }}
-                    {{ form.theme }}
-                    {#                    {{ form.theme.errors }}#}
-                </li>
-                {#                    <li>#}
-                {#                        <label for="email">Email:</label>#}
-                {#                        <input type="email" name="email" placeholder="john_doe@example.com" required />#}
-                {#                        <span class="form_hint">Proper format "name@something.com"</span>#}
-                {#                    </li>#}
-                {#                    <li>#}
-                {#                        <label for="website">Website:</label>#}
-                {#                        <input type="url" name="website" placeholder="http://johndoe.com" required pattern="(http|https)://.+"/>#}
-                {#                        <span class="form_hint">Proper format "http://someaddress.com"</span>#}
-                {#                    </li>#}
-                <li>
-                    {#                    <label for="message">Сообщение:</label>#}
-                    {{ form.text.label_tag }}
-                    {#                    <textarea name="message" cols="60" rows="6" required></textarea>#}
-                    {{ form.text }}
-                    {#                    {{ form.text.errors }}#}
-                </li>
-                <li>
-                    {#                        <input type="file" style="height: 30px; width: 350px;" name="image_file" id="image_file">#}
-                    {{ form.image_file.label_tag }}
-                    {{ form.image_file }}
-                    <p id="error_file" hidden style="color: red;">Выберите файл нужного формата</p>
-                    <input type="checkbox" id="save" value="Сохранить">
-                    <button class="submit" type="submit" id="send_message">Отправить</button>
-                    {#                                        <input type="submit" class="submit" value="OK">#}
-                </li>
-            </ul>
-            {#    </form>#}
+    <form method="post" name="contact_form" class="form_contact"
+          id="contact" action="." style="display: flex; justify-content: center; margin: 2%;">
+        <div style="width: 50%; align-self: center; margin-right: 10%; font-size: 15px;font-weight: bold;">
+            <div style="display: flex;">
+                <img src="{% static 'main/images/step3.jpg' %}" width="75%">
+{#                <h5>Автоматическая рассылка писем</h5>#}
+            </div>
+            <div>    {{ form.theme.label_tag }}
+                {{ form.theme }}
+            </div>
+            <div>
+                {{ form.text.label_tag }}
+                {{ form.text }}
+            </div>
+            <div>
+                {{ form.image_file }}
+                <div style="margin-top: 0.3em;"></div>
+                <span id="error_file" style="color: red; font-weight: normal;">Выберите файл нужного формата (*.jpeg; *.jpg; *.png; *.svg)</span>
+            </div>
+            <br>
+            <div style="display: flex; justify-content: flex-end; align-items: center; font-weight: normal;">
+                {#                justify-content: space-between;#}
+                Сохранить<label class="checkbox_save">&nbsp;<input class="form-check-input me-1" type="checkbox"
+                                                                   id="save"><span></span></label>
+                {#                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#}
+                <button class="submit" type="submit" id="send_message">Отправить</button>
+            </div>
 
 
         </div>
 
-        <div style=" width: 40%;" class="btn-group" id="group_main">
+        <div style=" width: 25%; align-items: stretch;">
+            <div style="height: 90%; min-height: 80%;  border-radius: 30px; border: 1px solid black;
+box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;">
+                <select class="group_type"
+                        style="margin: 2% 7% ; width: 86%; border-radius: 10px; height: 2.5em; font-weight: bolder;">
+                    <option>MKA</option>
+                    <option>ПКО</option>
+                    <option>ЕКО</option>
+                </select>
 
-            {% include 'main/groups.html' %}
-
+                {% include 'main/groups.html' %}
+            </div>
+            <button class="submit" style="height: 3em; margin: 5% 20%; width: 60%;" id="update_groups">
+                Обновить группы
+            </button>
         </div>
 
-        <button class="btn btn-success" id="update_groups"> Обновить группы</button>
+        {#        <button id="update_groups"> Обновить группы</button>#}
 
     </form>
-    {#        </ol>#}
-
-    {#    import collections#}
-    {#Foo = collections.namedtuple('Foo', ['id', 'created_date', 'number_of_clicks'])#}
-    {##}
-    {#def test(request):#}
-    {#    # check if form data is posted#}
-    {#    if request.method == 'POST':#}
-    {#        # simply return a string that shows the IDs of selected items#}
-    {#        return http.HttpResponse('<br />'.join(request.POST.getlist('choices')))#}
-    {##}
-    {#    else:#}
-    {#        items = [Foo(1,1,1),#}
-    {#                 Foo(2,2,2),#}
-    {#                 Foo(3,3,3)]#}
-    {##}
-    {#        t = loader.get_template('test.html')#}
-    {#        c = RequestContext(request, {#}
-    {#            'list': items,#}
-    {#            'host': 'me.com',#}
-    {#            })#}
-    {##}
-    {#    return http.HttpResponse(t.render(c))#}
-
 {% endblock %}
+
 
 
 {% block javascript %}
@@ -132,6 +190,7 @@
     <script>
 
         $(document).ready(function () {
+            $('#error_file').hide();
             var selected_groups = [];
 
             {#$(document).ready(function () {#}
@@ -139,20 +198,18 @@
             {#$.ajaxSetup({#}
             {#    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},#}
 
-            var send_message = $('#send_message');
-            var error_file = $('#error_file');
 
             $('#id_image_file').change(function (e) {
                 e.preventDefault();
+
                 var format = $(this)[0].files[0].name.split('.').pop()
                 var regex = new RegExp("(jpeg|jpg|png|svg)");
                 if (!(regex.test(format))) {
-                    send_message.attr('disabled', 'disabled');
-                    error_file.show()
-                }
-                else {
-                     send_message.attr('disabled', false)
-                     error_file.hide()
+                    $('#error_file').show();
+                    $('#send_message').attr('disabled', 'disabled');
+                } else {
+                    $('#error_file').hide();
+                    $('#send_message').attr('disabled', false);
                 }
             })
 
@@ -297,19 +354,35 @@
 
             $('#group_main').on('click', 'button', function (event) {
                 event.preventDefault();
-                const img = $(this).find('img');
 
+                const button = $(this);
 
-                if (img.attr('src') === '/static/main/images/pr.png') {
-                    img.attr('src', '/static/main/images/G41.png');
+                if (((button.css("background-image")).indexOf('circle.png')) !== -1) {
+                    button.css("background-image", `url("` + window.location.origin + `/static/main/images/circle_check.png")`);
                     selected_groups.push(this.id);
                 } else {
-                    img.attr('src', '/static/main/images/pr.png');
+                    button.css("background-image", `url("` + window.location.origin + `/static/main/images/circle.png")`);
                     const index = selected_groups.indexOf(this.id);
                     if (index > -1) {
                         selected_groups.splice(index, 1);
                     }
                 }
+
+
+                {#const img = $(this).find('img');#}
+                {##}
+                {##}
+                {#if (img.attr('src') === '/static/main/images/pr.png') {#}
+                {#    img.attr('src', '/static/main/images/G41.png');#}
+                {#    selected_groups.push(this.id);#}
+
+                {#else {#}
+                {#    img.attr('src', '/static/main/images/pr.png');#}
+                {#    const index = selected_groups.indexOf(this.id);#}
+                {#    if (index > -1) {#}
+                {#        selected_groups.splice(index, 1);#}
+                {#    }#}
+
                 {#alert(selected_groups);#}
             });
         });
@@ -317,3 +390,4 @@
     </script>
 
 {% endblock %}
+

@@ -9,12 +9,16 @@ class MessageForm(ModelForm):
 
         widgets = {
             "theme": TextInput(attrs={
-                'class': 'input100',
+                # 'class': 'input100',
+                'class': 'message_input theme_input'
             }),
             "text": Textarea(attrs={
-                'class': 'input100',
+                # 'class': 'input100',
+                'class': 'message_input'
             }),
-            "image_file": FileInput(),
+            "image_file": FileInput(attrs={
+                'class': "form-control form-control-sm "
+            }),
         }
 
 

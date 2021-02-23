@@ -47,24 +47,25 @@
                     </div>
 
                     <div class="flex-sb-m w-full p-b-30">
-                        <label class="label-checkbox100">
+                        <label class="checkbox_save">
                             {#                        <div class="contact100-form-checkbox">#}
-                            {#                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember_me">#}
-                            {{ form.remember_me }}
-
+                            <input class="form-check-input me-1" type="checkbox" name="remember_me">
+                            {#                            {{ form.remember_me }}#}
+                            <span style="margin: 0"></span>
                             Запомнить меня
                         </label>
+
                         {#                        </div>#}
 
-                        <div>
-                            <a href="#" class="txt1">
-                                Забыли пароль?
-                            </a>
-                        </div>
+{#                        <div>#}
+{#                            <a href="#" class="txt1">#}
+{#                                Забыли пароль?#}
+{#                            </a>#}
+{#                        </div>#}
                     </div>
 
                     <div class="container-login100-form-btn">
-                        <button class="login100-form-btn" type="submit">
+                        <button class="submit" type="submit">
                             Войти
                         </button>
                         {#                        <p>{{ s }}</p>#}

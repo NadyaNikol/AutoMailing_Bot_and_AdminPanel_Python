@@ -1,0 +1,43 @@
+.message_input {
+    box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
+    border: 1px solid black;
+    width: 100%;
+    margin: 3% 0;
+    resize: none;
+    border-radius: 8px;
+    /*font: 15px "Trebuchet MS", "Lucida Sans";*/
+}
+
+.theme_input {
+    height: 2.5em;
+}
+
+.group_type {
+    text-align-last: center;
+}
+
+.checkbox_save input {
+    display: none; /* <--скрываем дефолтный чекбокс */
+
+}
+
+.checkbox_save span { /* <-- стилизируем новый */
+    margin: 7px 35px 0 0 ;
+    height: 15px;
+    width: 15px;
+    border: 1px solid gray;
+    display: inline-block;
+    position: relative;
+    background-color: #FFF;
+    border-radius: 2px;
+    /*padding:3px;*/
+}
+
+[type=checkbox]:checked + span:before { /* <-- ставим иконку, когда чекбокс включен  */
+    content: '\2714';
+    position: absolute;
+    top: -6px;
+    left: 0;
+    font-size: 23px;
+    color: green;
+}
