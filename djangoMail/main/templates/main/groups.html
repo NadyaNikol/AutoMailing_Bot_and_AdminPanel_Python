@@ -1,4 +1,4 @@
-{% load static %}
+
 
 {#<div style="height: 95%; min-height: 90%;  border-radius: 40px; border: 1px solid black;">#}
 {#    <select class="group_type" style="margin: 2% 7% ; width: 86%; border-radius: 10px; height: 2.5em; font-weight: bolder;">#}
@@ -6,8 +6,7 @@
 {#        <option>ПКО</option>#}
 {#        <option>ЕКО</option>#}
 {#    </select>#}
-    <div id="group_main" style="display: flex; flex-wrap: wrap;
-         align-content: flex-start;">
+    <div id="div_groups">
 
 
         {% for el in list_info %}
@@ -62,16 +61,13 @@
 
 
             <div>
-                <button id="{{ el.id_group }}" class="btn_check_group"
-                        style="width: 7em; height: 7em;
-                                background-image: url('{% static 'main/images/circle.png' %}');">
-                    <span style="font-size: 17px; font-weight: bolder;">{{ el.name }}</span>
+                <button id="{{ el.id_group }}" class="btn_check_group">
+                    <span>{{ el.name }}</span>
                 </button>
             </div>
 
 
         {% endfor %}
-
     </div>
 
 {#</div>#}

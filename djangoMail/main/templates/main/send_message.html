@@ -91,7 +91,7 @@
 {##}
 {#        </div>#}
 {##}
-{#        <div style=" width: 40%;" class="btn-group" id="group_main">#}
+{#        <div style=" width: 40%;" class="btn-group" id="div_groups">#}
 {##}
 {#            {% include 'main/groups.html' %}#}
 {##}
@@ -132,7 +132,7 @@
 
     <form method="post" name="contact_form" class="form_contact"
           id="contact" action="." style="display: flex; justify-content: center; margin: 2% 0;">
-        <div style="width: 50%; margin-right: 3.5%; font-size: 15px; font-weight: bold;">
+        <div id="message_main">
             <img src="{% static 'main/images/step3.jpg' %}" width="75%">
 
             <div>
@@ -145,11 +145,11 @@
             </div>
             <div>
                 {{ form.image_file }}
-                <div style="margin-top: 0.3em;"></div>
-                <span id="error_file" style="color: red; font-weight: normal;">Выберите файл нужного формата (*.jpeg; *.jpg; *.png; *.svg)</span>
+                <div id="error_file_div"></div>
+                <span id="error_file">Выберите файл нужного формата (*.jpeg; *.jpg; *.png; *.svg)</span>
             </div>
             <br>
-            <div style="display: flex; justify-content: flex-end; align-items: center; font-weight: normal;">
+            <div id="save_submit">
                 {#                justify-content: space-between;#}
                 Сохранить<label class="checkbox_save">&nbsp;<input class="form-check-input me-1" type="checkbox"
                                                                    id="save"><span></span></label>
@@ -160,11 +160,9 @@
 
         </div>
 
-        <div style=" width: 31.5%; margin-top: 1%;">
-            <div style="height: 90%; min-height: 80%;  border-radius: 30px; border: 1px solid black;
-box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;">
-                <select class="group_type"
-                        style="margin: 2% 7% ; width: 86%; border-radius: 10px; height: 2.5em; font-weight: bolder;">
+        <div id="group_main">
+            <div id="group_main2">
+                <select>
                     <option>MKA</option>
                     <option>ПКО</option>
                     <option>ЕКО</option>
@@ -172,7 +170,7 @@ box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;">
 
                 {% include 'main/groups.html' %}
             </div>
-            <button class="submit" style=" margin: 5% 20%; width: 60%;" id="update_groups">
+            <button class="submit" id="update_groups">
                 Обновить группы
             </button>
         </div>
@@ -270,7 +268,7 @@ box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;">
                         {#отправляем данные формы вместе с обновлением страницы (данные введенные не потеряются)#}
                         {#const form = $('#contact').serializeArray();#}
 
-                        {#$('#group_main').html('').load(#}
+                        {#$('#div_groups').html('').load(#}
                         {#            "{% url 'show_groups' %}");#}
 
                         $.ajax({
@@ -286,14 +284,14 @@ box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;">
                             success: function (data) {
 
                                 {#history.pushState(null, null, '{% url 'send_message' %}');#}
-                                {#$('#group_main').reload();#}
-                                $('#group_main').html('').load(
+                                {#$('#div_groups').reload();#}
+                                $('#div_groups').html('').load(
                                     "{% url 'show_groups' %}");
                                 {#alert('ssss');#}
                                 {#window.location = window.location.href;#}
                                 {#window.location.assign(document.URL);#}
                                 {#alert(data['list_info'][0]['id_group'])#}
-                                {#var group_div = document.getElementById('group_main')#}
+                                {#var group_div = document.getElementById('div_groups')#}
                                 {#group_div.innerHTML = ''#}
                                 {#data['list_info'].forEach(#}
                                 {#el=> document.getElementById(el['id_group']).innerHTML = el['name']#}
@@ -351,7 +349,7 @@ box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;">
             {#    };#}
 
 
-            $('#group_main').on('click', 'button', function (event) {
+            $('#div_groups').on('click', 'button', function (event) {
                 event.preventDefault();
 
                 const button = $(this);

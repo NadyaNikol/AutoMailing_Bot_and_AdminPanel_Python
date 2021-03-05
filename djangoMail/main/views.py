@@ -65,8 +65,6 @@ def send_message(request):
         theme = form_data[0]['value']
         text = form_data[1]['value']
 
-
-
         if is_save == "true":
             Messages.save_recording(theme, text, settings_root, name_file)
 

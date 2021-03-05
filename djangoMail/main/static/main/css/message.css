@@ -54,17 +54,17 @@
 /*    display: inline;*/
 /*}*/
 
-.required_notification {
-    color: #d45252;
-    margin: 5px 0 0 0;
-    display: inline;
-    float: right;
-}
+/*.required_notification {*/
+/*    color: #d45252;*/
+/*    margin: 5px 0 0 0;*/
+/*    display: inline;*/
+/*    float: right;*/
+/*}*/
 
-.message_input {
-    box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
-    border: 2px solid black;
-}
+/*.message_input {*/
+/*    box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;*/
+/*    border: 2px solid black;*/
+/*}*/
 
 
 /* === Form Elements === */
@@ -93,21 +93,21 @@
 
 /* form element visual styles */
 /*.contact_form input, .contact_form textarea {*/
-    /*border: 1px solid #aaa;*/
-    /*box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;*/
-    /*border-radius: 2px;*/
-    /*padding-right: 30px;*/
-    /*-moz-transition: padding .25s;*/
-    /*-webkit-transition: padding .25s;*/
-    /*-o-transition: padding .25s;*/
-    /*transition: padding .25s;*/
+/*border: 1px solid #aaa;*/
+/*box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;*/
+/*border-radius: 2px;*/
+/*padding-right: 30px;*/
+/*-moz-transition: padding .25s;*/
+/*-webkit-transition: padding .25s;*/
+/*-o-transition: padding .25s;*/
+/*transition: padding .25s;*/
 /*}*/
 
 /*.contact_form input:focus, .contact_form textarea:focus {*/
 /*    background: #fff;*/
 /*    border: 1px solid #555;*/
 /*    box-shadow: 0 0 3px #aaa;*/
-    /*padding-right: 70px;*/
+/*padding-right: 70px;*/
 /*}*/
 
 /* === HTML5 validation styles === */
@@ -128,24 +128,24 @@
 /*}*/
 
 /* === Form hints === */
-.form_hint {
-    background: #d45252;
-    border-radius: 3px 3px 3px 3px;
-    color: white;
-    margin-left: 8px;
-    padding: 1px 6px;
-    z-index: 999; /* hints stay above all other elements */
-    position: absolute; /* allows proper formatting if hint is two lines */
-    display: none;
-}
+/*.form_hint {*/
+/*    background: #d45252;*/
+/*    border-radius: 3px 3px 3px 3px;*/
+/*    color: white;*/
+/*    margin-left: 8px;*/
+/*    padding: 1px 6px;*/
+/*    z-index: 999; !* hints stay above all other elements *!*/
+/*    position: absolute; !* allows proper formatting if hint is two lines *!*/
+/*    display: none;*/
+/*}*/
 
-.form_hint::before {
-    content: "\25C0";
-    color: #d45252;
-    position: absolute;
-    top: 1px;
-    left: -6px;
-}
+/*.form_hint::before {*/
+/*    content: "\25C0";*/
+/*    color: #d45252;*/
+/*    position: absolute;*/
+/*    top: 1px;*/
+/*    left: -6px;*/
+/*}*/
 
 /*.contact_form input:focus + .form_hint {*/
 /*    display: inline;*/
@@ -203,51 +203,51 @@ button.submit:active {
 }
 
 /*groups form*/
-.rounded {
-    counter-reset: li;
-    list-style: none;
-    font: 14px "Trebuchet MS", "Lucida Sans";
-    padding: 0;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
-}
+/*.rounded {*/
+/*    counter-reset: li;*/
+/*    list-style: none;*/
+/*    font: 14px "Trebuchet MS", "Lucida Sans";*/
+/*    padding: 0;*/
+/*    text-shadow: 0 1px 0 rgba(255, 255, 255, .5);*/
+/*}*/
 
-.rounded a {
-    position: relative;
-    display: block;
-    padding: .4em .4em .4em 2em;
-    margin: .5em 0;
-    background: #DAD2CA;
-    color: #444;
-    text-decoration: none;
-    border-radius: .3em;
-    transition: .3s ease-out;
-}
+/*.rounded a {*/
+/*    position: relative;*/
+/*    display: block;*/
+/*    padding: .4em .4em .4em 2em;*/
+/*    margin: .5em 0;*/
+/*    background: #DAD2CA;*/
+/*    color: #444;*/
+/*    text-decoration: none;*/
+/*    border-radius: .3em;*/
+/*    transition: .3s ease-out;*/
+/*}*/
 
-.rounded a:hover {
-    background: #E9E4E0;
-}
+/*.rounded a:hover {*/
+/*    background: #E9E4E0;*/
+/*}*/
 
-.rounded a:hover:before {
-    transform: rotate(360deg);
-}
+/*.rounded a:hover:before {*/
+/*    transform: rotate(360deg);*/
+/*}*/
 
-.rounded a:before {
-    content: counter(li);
-    counter-increment: li;
-    position: absolute;
-    left: -1.3em;
-    top: 50%;
-    margin-top: -1.3em;
-    background: #8FD4C1;
-    height: 2em;
-    width: 2em;
-    line-height: 2em;
-    border: .3em solid white;
-    text-align: center;
-    font-weight: bold;
-    border-radius: 2em;
-    transition: all .3s ease-out;
-}
+/*.rounded a:before {*/
+/*    content: counter(li);*/
+/*    counter-increment: li;*/
+/*    position: absolute;*/
+/*    left: -1.3em;*/
+/*    top: 50%;*/
+/*    margin-top: -1.3em;*/
+/*    background: #8FD4C1;*/
+/*    height: 2em;*/
+/*    width: 2em;*/
+/*    line-height: 2em;*/
+/*    border: .3em solid white;*/
+/*    text-align: center;*/
+/*    font-weight: bold;*/
+/*    border-radius: 2em;*/
+/*    transition: all .3s ease-out;*/
+/*}*/
 
 
 /*.group {*/
@@ -271,19 +271,143 @@ button.submit:active {
 /*    padding: 0;*/
 /*}*/
 
-.group img {
-    height: 160px;
-    width: 250px;
+/*.group img {*/
+/*    height: 160px;*/
+/*    width: 250px;*/
+/*}*/
+
+/*=============================================*/
+
+/*div with message*/
+#message_main {
+    width: 50%;
+    margin-right: 3.5%;
+    font-size: 15px;
+    font-weight: bold;
 }
 
-.group span {
-    /*background: rgba(0,0,0,0.7); (полупрозрачность)*/
-    background: #222;
-    color: #fff;
-    border-radius: 2px;
-    position: absolute;
-    right: 0;
-    bottom: 10px;
-    font-size: 18px;
-    padding: 3px 5px;
+#error_file_div {
+    margin-top: 0.3em;
 }
+
+#error_file {
+    color: red;
+    font-weight: normal;
+}
+
+#save_submit {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-weight: normal;
+}
+
+/*.group span {*/
+/*    !*полупрозрачность*!*/
+/*    background: rgba(0, 0, 0, 0.7);*/
+/*    !*background: #222;*!*/
+/*    color: #fff;*/
+/*    border-radius: 2px;*/
+/*    position: absolute;*/
+/*    right: 0;*/
+/*    bottom: 10px;*/
+/*    font-size: 18px;*/
+/*    padding: 3px 5px;*/
+/*}*/
+
+/*message and text*/
+.message_input {
+    box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
+    border: 1px solid black;
+    width: 100%;
+    margin: 3% 0;
+    resize: none;
+    border-radius: 8px;
+    /*font: 15px "Trebuchet MS", "Lucida Sans";*/
+}
+
+.theme_input {
+    height: 2.5em;
+}
+
+/*checkbox*/
+.checkbox_save input {
+    display: none; /* <--скрываем дефолтный чекбокс */
+
+}
+
+.checkbox_save span { /* <-- стилизируем новый */
+    margin: 7px 35px 0 0;
+    height: 15px;
+    width: 15px;
+    border: 1px solid gray;
+    display: inline-block;
+    position: relative;
+    background-color: #FFF;
+    border-radius: 2px;
+    /*padding:3px;*/
+}
+
+[type=checkbox]:checked + span:before { /* <-- ставим иконку, когда чекбокс включен  */
+    content: '\2714';
+    position: absolute;
+    top: -14px;
+    left: 0;
+    font-size: 23px;
+    color: green;
+}
+
+/*=================================================*/
+
+
+/*div with all groups*/
+#group_main {
+    width: 31.5%;
+    margin-top: 1%;
+}
+
+#group_main2 {
+    height: 90%;
+    min-height: 80%;
+    border-radius: 30px;
+    border: 1px solid black;
+    box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
+}
+
+#div_groups {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+/*select*/
+#group_main2 select {
+    text-align-last: center;
+    margin: 2% 7%;
+    width: 86%;
+    border-radius: 10px;
+    height: 2.5em;
+    font-weight: bolder;
+}
+
+
+/*buttons groups*/
+.btn_check_group {
+    width: 6em;
+    height: 6em;
+    background-image: url("../images/circle.png");
+    /*box-shadow: 4px 4px 4px green, 0 5px 5px green;*/
+
+    border-radius: 50%;
+}
+
+.btn_check_group span {
+    font-size: 17px;
+    font-weight: bolder;
+}
+
+#update_groups {
+    margin: 5% 20%;
+    width: 60%;
+}
+
