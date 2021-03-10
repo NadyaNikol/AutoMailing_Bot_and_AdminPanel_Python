@@ -5,6 +5,15 @@ from django.core.files import File
 
 
 class Groups(models.Model):
+    all_type_groups = [{"id": 0, "name": "ПКО"},
+                       {"id": 1, "name": "МКА"},
+                       {"id": 2, "name": "ЕКО"}]
+    # all_type_groups[0] =
+    # all_type_groups[1] =
+    # all_type_groups[2] =
+
+    selected_type_group = all_type_groups[0]['id']
+
     id_group = models.IntegerField(unique=True)
     name = models.CharField('Название группы', max_length=50)
 
@@ -16,7 +25,7 @@ class Groups(models.Model):
         verbose_name_plural = 'Группы'
 
     @staticmethod
-    def get_id_groups():
+    def get_data_groups():
         try:
             # all_id = Groups.objects.values_list('id_group', flat=True)
             all_id = Groups.objects.values('id_group', 'name')

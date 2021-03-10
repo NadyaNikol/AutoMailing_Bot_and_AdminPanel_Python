@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils.datastructures import MultiValueDictKeyError
+
 from .models import Messages, Groups
 from .forms import MessageForm, GroupsForm
 from telegram import Bot
@@ -8,16 +10,46 @@ from django.conf import settings
 import time
 import cgitb
 import json
+import re
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.files.storage import default_storage
 import datetime
 
 
-def send_message(request):
-    all_info = Groups.get_id_groups()
-    if all_info is None: all_info = []
+def splitting_into_groups(list_group):
+    groupMKA = []
+    groupPKO = []
+    groupEKO = []
 
-    list_info = list(all_info)
+    for i, item in enumerate(list_group):
+        str_name = list_group[i]['name'] = str(list_group[i]['name']).upper()
+        # EKO in the english and in the russian languages
+        if str_name.upper().find("EKO") != -1 or \
+                str_name.upper().find("ЕКО") != -1:
+            groupEKO.append(list_group[i])
+
+        elif (re.search(r'\d{4}', str_name)) is not None or (
+                re.search(r'^\D{2}\d{2}$', str_name)) is not None:
+            groupMKA.append(list_group[i])
+
+        else:
+            groupPKO.append(list_group[i])
+
+    return groupMKA, groupPKO, groupEKO
+
+
+def send_message(request):
+    try:
+        type_of_group_ind = request.GET['type_of_group_ind']
+        type_of_group_ind = int(type_of_group_ind)
+
+        if type_of_group_ind != "" and 0 <= type_of_group_ind <= 3:
+            Groups.selected_type_group = Groups.all_type_groups[type_of_group_ind]['id']
+
+    except MultiValueDictKeyError as e:
+        pass
+    except Exception as e:
+        pass
 
     if request.method == 'POST':
         # image = request.FILES.get('image')
@@ -155,11 +187,35 @@ def send_message(request):
         # except ValidationError as e:
         #     s = str(e)
 
+    all_info = Groups.get_data_groups()
+    if all_info is None: all_info = []
+
+    list_info = list(all_info)
+
+    groupMKA, groupPKO, groupEKO = splitting_into_groups(list_info)
+
+    send_list = []
+
+    if Groups.selected_type_group == Groups.all_type_groups[0]['id']:
+        send_list = groupPKO
+    elif Groups.selected_type_group == Groups.all_type_groups[1]['id']:
+        send_list = groupMKA
+    else:
+        send_list = groupEKO
+
+    if request.is_ajax():
+        return render(request, 'main/groups.html', {'list_info': send_list})
+
     form = MessageForm()
     data = {
         'form': form,
-        'list_info': list_info,
+        # 'list_info': list_info,
+        'list_info': send_list,
+        'type_group': Groups.all_type_groups,
+        'selected_type': Groups.selected_type_group
+
     }
+
     return render(request, 'main/send_message.html', data)
 
 
@@ -190,34 +246,54 @@ def is_unique_id(list_group, id_group):
 
 
 def show_groups(request):
-    all_info = Groups.get_id_groups()
-    if all_info is None: all_info = []
+    all_info = Groups.get_data_groups()
+    if all_info is None:
+        all_info = []
 
     list_info = list(all_info)
 
     if request.method == 'POST' and request.is_ajax():
 
-        req = request.POST
-        update_groups = json.loads(req['data'])
+        try:
+            req = request.POST
+            update_groups = json.loads(req['data'])
 
-        if update_groups is not None and 'result' in update_groups:
-            for group in update_groups['result']:
-                if 'id' in group['message']['chat']:
-                    js_id = group['message']['chat']['id']
-                    is_unique, index_el = is_unique_id(list_info, js_id)
+            if update_groups is not None and 'result' in update_groups:
+                for group in update_groups['result']:
+                    if 'message' in group:
+                        if 'id' in group['message']['chat']:
+                            js_id = group['message']['chat']['id']
+                            is_unique, index_el = is_unique_id(list_info, js_id)
 
-                    if 'left_chat_participant' in group['message']:
-                        if index_el is not -1:
-                            Groups.delete_recording(js_id)
-                            del list_info[index_el]
+                            if 'left_chat_participant' in group['message']:
+                                if index_el is not -1:
+                                    Groups.delete_recording(js_id)
+                                    del list_info[index_el]
 
-                    elif js_id is not None:
-                        if is_unique:
-                            js_name = group['message']['chat']['title']
-                            Groups.save_recording(js_id, js_name)
-                            list_info.append({'id_group': js_id, 'name': js_name})
+                            elif js_id is not None:
+                                if is_unique:
+                                    js_name = group['message']['chat']['title']
+                                    Groups.save_recording(js_id, js_name)
+                                    list_info.append({'id_group': js_id, 'name': js_name})
 
-    return render(request, 'main/groups.html', {'list_info': list_info})
+        except Exception as e:
+            pass
+
+    groupMKA, groupPKO, groupEKO = splitting_into_groups(list_info)
+
+    send_list = []
+
+    if Groups.selected_type_group == Groups.all_type_groups[0]['id']:
+        send_list = groupPKO
+    elif Groups.selected_type_group == Groups.all_type_groups[1]['id']:
+        send_list = groupMKA
+    else:
+        send_list = groupEKO
+
+    return render(request, 'main/groups.html', {
+        'list_info': send_list,
+        'selected_type': Groups.selected_type_group
+    })
     # return JsonResponse({
     #     'list_info': 'ok'})
 
@@ -244,3 +320,6 @@ def show_groups(request):
 #     'list_info': list_info,
 # }
 # return JsonResponse(data)
+
+# def change_type_group(request):
+

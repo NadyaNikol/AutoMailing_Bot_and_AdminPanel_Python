@@ -162,10 +162,18 @@
 
         <div id="group_main">
             <div id="group_main2">
-                <select>
-                    <option>MKA</option>
-                    <option>ПКО</option>
-                    <option>ЕКО</option>
+                <select id="select_group">
+                    {% for type in type_group %}
+                        {% if selected_type == type.id %}
+                            <option value="{{ type.id }}" selected>{{ type.name }}</option>
+
+                        {% else %}
+                            <option value="{{ type.id }}">{{ type.name }}</option>
+                        {% endif %}
+                        {#                    <option>ПКО</option>#}
+                        {#                    <option>МКА</option>#}
+                        {#                    <option>ЕКО</option>#}
+                    {% endfor %}
                 </select>
 
                 {% include 'main/groups.html' %}
@@ -189,6 +197,33 @@
         $(document).ready(function () {
             $('#error_file').hide();
             var selected_groups = [];
+
+            $('#select_group').change(function (e) {
+                e.preventDefault();
+
+                {#alert($(this).val())#}
+                $.ajax({
+                    {#type: $(this).attr('method'),#}
+                    type: "GET",
+                    datatype: "JSON",
+                    url: $(this).attr('action'),
+                    data: {"type_of_group_ind": $(this).val()},
+                    success: function () {
+                        {#alert("ajax answer");#}
+                        $('#div_groups').html('').load(
+                            "{% url 'show_groups' %}");
+                    }
+                    {#success: function (data) {#}
+                    {#    if (data.result === 'ok') {#}
+                    {#        alert('Рассылка успешно завершена');#}
+                    {#        location.reload();#}
+                    {#    } else {#}
+                    {#        alert(data.result);#}
+                    {#    }#}
+
+                });
+
+            });
 
             {#$(document).ready(function () {#}
 
