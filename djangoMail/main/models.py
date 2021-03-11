@@ -29,6 +29,8 @@ class Groups(models.Model):
         try:
             # all_id = Groups.objects.values_list('id_group', flat=True)
             all_id = Groups.objects.values('id_group', 'name')
+            if all_id is None: all_id = []
+            all_id = list(all_id)
             return all_id
         except ObjectDoesNotExist:
             return None
@@ -87,3 +89,14 @@ class Messages(models.Model):
             print('не удалось открыть файл')
         except Exception as e:
             print(e)
+
+    @staticmethod
+    def get_data_messages():
+        try:
+            # all_id = Groups.objects.values_list('id_group', flat=True)
+            all_data = Messages.objects.values()
+            if all_data is None: all_data = []
+            all_data = list(all_data)
+            return all_data
+        except ObjectDoesNotExist:
+            return None

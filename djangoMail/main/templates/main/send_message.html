@@ -136,7 +136,13 @@
             <img src="{% static 'main/images/step3.jpg' %}" width="75%">
 
             <div>
+                <span style="display: flex;">
                 {{ form.theme.label_tag }}
+                     <img style="width: 5%; height: 20px; margin-left: 60%;" src="{% static 'main/images/arrow.png' %}">
+                    <button type="button" class="open_modal" style="width: 30%;">
+                        Выбрать из сохраненных
+                    </button>
+                    </span>
                 {{ form.theme }}
             </div>
             <div>
@@ -186,6 +192,30 @@
         {#        <button id="update_groups"> Обновить группы</button>#}
 
     </form>
+
+
+    <!-- Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Сохраненные сообщения</h5>
+{#                    <button type="button" class="close">#}
+{#                        <span aria-hidden="true">&times;</span>#}
+{#                    </button>#}
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 {% endblock %}
 
 
@@ -197,6 +227,70 @@
         $(document).ready(function () {
             $('#error_file').hide();
             var selected_groups = [];
+
+
+            {#$('#myModal').modal('toggle')#}
+            $('.open_modal').click(function (e){
+                e.preventDefault();
+
+                 $.ajax({
+                     {#type: $(this).attr('method'),#}
+                     {#type: "POST",#}
+                     {#datatype: "JSON",#}
+                      url: '{% url 'get_saved_messages' %}',
+                     {#data: {"type_of_group_ind": $(this).val()},#}
+                     success: function (data) {
+
+                         if (data.result === 'ok') {
+
+                             {#alert();#}
+                             {#alert(data.saved_messages['theme']);#}
+
+                             var modal = $('.modal');
+                             var modal_body = $('.modal-body');
+
+                             var saved_mess = data.saved_messages;
+
+                             saved_mess.forEach(el=> {
+                                 {#alert(el['text']));#}
+
+                                 modal_body.append(
+                                     "<div> " +
+                                        "<button id = 'mess_" + el['id'] + "'>" +
+                                            "<h4>" + el['theme'] + "</h4>"
+                                            + el['text'] + ((el['image_file']==='')?'++':'--') +
+                                        "</button>" +
+                                     "</div>" +
+                                     "<hr/>")
+                             });
+                             modal.modal('show');
+                         } else {
+                             alert('Произошла ошибка. Повторите вашу попытку')
+                         }
+
+                     }
+                 });
+
+            });
+
+            $('.modal-body').on('click', 'button', function (e) {
+                e.preventDefault();
+                const button = $(this);
+                var id = button.attr('id');
+                 var d = document.getElementById(id);
+                 var s = d.getElementsByTagName('h4');
+
+                 var theme = s[0].innerHTML;
+
+                  var th = document.getElementById('id_theme');
+
+                  th.value = theme;
+
+                  $('.modal').modal('hide');
+
+                {#alert(s[0].innerHTML);#}
+
+            });
 
             $('#select_group').change(function (e) {
                 e.preventDefault();
@@ -384,8 +478,8 @@
             {#    };#}
 
 
-            $('#div_groups').on('click', 'button', function (event) {
-                event.preventDefault();
+            $('#div_groups').on('click', 'button', function (e) {
+                e.preventDefault();
 
                 const button = $(this);
 
@@ -417,6 +511,8 @@
 
                 {#alert(selected_groups);#}
             });
+
+
         });
 
     </script>

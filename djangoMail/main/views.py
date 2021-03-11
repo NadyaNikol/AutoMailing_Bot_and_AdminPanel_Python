@@ -187,10 +187,10 @@ def send_message(request):
         # except ValidationError as e:
         #     s = str(e)
 
-    all_info = Groups.get_data_groups()
-    if all_info is None: all_info = []
-
-    list_info = list(all_info)
+    list_info = Groups.get_data_groups()
+    # if all_info is None: all_info = []
+    #
+    # list_info = list(all_info)
 
     groupMKA, groupPKO, groupEKO = splitting_into_groups(list_info)
 
@@ -246,11 +246,11 @@ def is_unique_id(list_group, id_group):
 
 
 def show_groups(request):
-    all_info = Groups.get_data_groups()
-    if all_info is None:
-        all_info = []
-
-    list_info = list(all_info)
+    list_info = Groups.get_data_groups()
+    # if all_info is None:
+    #     all_info = []
+    #
+    # list_info = list(all_info)
 
     if request.method == 'POST' and request.is_ajax():
 
@@ -297,6 +297,7 @@ def show_groups(request):
     # return JsonResponse({
     #     'list_info': 'ok'})
 
+
 # type = ret['type']
 # list1 = json.loads(ret['data'])
 # form = request.POST
@@ -321,5 +322,8 @@ def show_groups(request):
 # }
 # return JsonResponse(data)
 
-# def change_type_group(request):
-
+def get_saved_messages(request):
+    if request.is_ajax():
+        saved_messages = Messages.get_data_messages()
+        return JsonResponse({'saved_messages': saved_messages, 'result': 'ok'})
+    return JsonResponse({'result': 'error'})
