@@ -1,19 +1,18 @@
-from django.core.exceptions import ValidationError
+import os
+
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.utils.datastructures import MultiValueDictKeyError
-
 from .models import Messages, Groups
-from .forms import MessageForm, GroupsForm
+from .forms import MessageForm
 from telegram import Bot
 from django.conf import settings
 import time
-import cgitb
 import json
 import re
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.files.storage import default_storage
-import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def splitting_into_groups(list_group):
@@ -38,29 +37,30 @@ def splitting_into_groups(list_group):
     return groupMKA, groupPKO, groupEKO
 
 
+def get_send_list(list_info):
+    groupMKA, groupPKO, groupEKO = splitting_into_groups(list_info)
+
+    if Groups.selected_type_group == Groups.all_type_groups[0]['id']:
+        send_list = groupPKO
+    elif Groups.selected_type_group == Groups.all_type_groups[1]['id']:
+        send_list = groupMKA
+    else:
+        send_list = groupEKO
+
+    return send_list
+
+
+def is_unique_id(list_group, id_group, name_group):
+    for i, item in enumerate(list_group):
+        if id_group == item['id_group'] and name_group != item['name']:
+            return False, True, i
+        elif id_group == item['id_group']:
+            return False, False, i
+    return True, False, -1
+
+
 def send_message(request):
-    try:
-        type_of_group_ind = request.GET['type_of_group_ind']
-        type_of_group_ind = int(type_of_group_ind)
-
-        if type_of_group_ind != "" and 0 <= type_of_group_ind <= 3:
-            Groups.selected_type_group = Groups.all_type_groups[type_of_group_ind]['id']
-
-    except MultiValueDictKeyError as e:
-        pass
-    except Exception as e:
-        pass
-
     if request.method == 'POST':
-        # image = request.FILES.get('image')
-        # data_form = request.POST.get('form')
-        # selected_groups = request.POST.get('selected_groups')
-        #
-        # s = settings.MEDIA_ROOT
-        # # all_info = Groups.get_id_groups()
-        # # list_info = list(all_info)
-        # post = request.POST
-
         form = MessageForm(request.POST, request.FILES)
         selected_groups = form.data['selected_groups']
 
@@ -75,7 +75,7 @@ def send_message(request):
         try:
             image = form.files['image']
         except Exception as e:
-            print(e)
+            logger.warning(e)
 
         if image != "":
             try:
@@ -83,125 +83,53 @@ def send_message(request):
                     for chunk in image.chunks():
                         destination.write(chunk)
 
-                name_file = image.name
+                # name_file = image.name
             except IOError as e:
-                print('не удалось открыть файл')
+                logger.warning('не удалось открыть файл')
             except Exception as e:
-                print(e)
-        # ss = request.FILES['file']
+                logger.warning(e)
 
-        # form_data = post['data_form']
-        # file = post['file']
-        # form_data = json.loads(post['data_form'])
         form_data = json.loads(form_data)
         theme = form_data[0]['value']
         text = form_data[1]['value']
 
         if is_save == "true":
-            Messages.save_recording(theme, text, settings_root, name_file)
-
-        # form = MessageForm(initial={'theme': theme, 'text': text, 'image_file': settings.MEDIA_ROOT+'/mmm.jpg'})
-        # form.save()
-        # if theme != "" and text != "":
-        #     form = MessageForm(initial={'theme': theme, 'text': text})
-        #     # form.save()
-        # # selected_groups = json.loads(post['selected_groups'])
+            Messages.save_recording(theme, text)
 
         selected_groups = json.loads(selected_groups)
-
-        # map(int, selected_groups)
-        # selected_groups = map(int, selected_groups)
-        # selected_groups = [int(numeric_string) for numeric_string in selected_groups]
+        # photo_send = ""
         # try:
-        #     if form.is_valid():
-        # fd = form.data
-        # s = fd['theme']
-        # d = fd['text']
-        photo_send = ""
+        #     photo_send = open(settings_root + '/' + image.name, 'rb')
+        # except IOError as e:
+        #     logger.warning('не удалось открыть файл')
+        # except Exception as e:
+        #     logger.warning(e)
+        el_error = ''
         try:
-            photo_send = open(settings_root + '/' + image.name, 'rb')
-        except IOError as e:
-            print('не удалось открыть файл')
+            bot = Bot(token=settings.TOKEN)
+            for el in selected_groups:
+                el_error = el
+                bot.send_message(el, "*" + theme + "*\n" + text, parse_mode='Markdown')
+
+                if image != "":
+                    bot.sendPhoto(el, photo=open(settings_root + '/' + image.name, 'rb'))
+                time.sleep(0.5)
+
+            if image != "":
+                os.remove(settings_root + '\\' + image.name)
+            return JsonResponse({'result': 'ok'})
         except Exception as e:
-            print(e)
-
-        try:
-            if selected_groups != "":
-                bot = Bot(token=settings.TOKEN)
-                for el in selected_groups:
-                    bot.send_message(el, "*" + theme + "*\n" + text, parse_mode='Markdown')
-
-                    if photo_send != "":
-                        bot.sendPhoto(el, photo=photo_send)
-                    time.sleep(1)
-                # return redirect('send_message')
-                return JsonResponse({'result': 'ok'})
-        except Exception as e:
-            print(e)
-            return JsonResponse({'result': 'Произошла ошибка. Рассылка не была совершена. Повторите попытку'})
-
-        # fd = form.data
-        # data = {
-        #     # 'form': form,
-        #     'list_info': list_info,
-        # }
-        # # return JsonResponse(data)
-        # return render(request, 'main/send_message.html', data)
-
-        # except ObjectDoesNotExist:
-        #     error = 'Логин или пароль введены не верно'
-        # except MultipleObjectsReturned:
-        #     error = 'Логин или пароль введены не верно'
-
-        # form = json.loads(request.POST['result[0][message][chat][id]'])
-        # update_groups = request.POST['update_groups']
-        # update groups
-
-        # form = list(form.data)
-        # result = json.load(form)
-        # s = result['result']
-
-        # try:
-        # if form.is_valid():
-        # save = request.POST['save']
-        # if save is not None:
-        #     a = form.data['theme']  # form.save()
-        #
-        #     # ss = form2.getlist('iss')
-        #
-        #     b = form.data['text']
-        #     sel = form.data['selected_groups']
-        #     # if list_info is not None:a
-        #     bot = Bot(token=settings.TOKEN)
-        #     # for el in list_info:
-        #     #     bot.send_message(el['id_group'], "*" + form.data['theme'] + "*\n" + form.data['text'], parse_mode='Markdown')
-        #     #     time.sleep(1)
-        #     for el in form.selected_groups:
-        #         bot.send_message(el, "*" + form.data['theme'] + "*\n" + form.data['text'],
-        #                          parse_mode='Markdown')
-        #         time.sleep(1)
-        #     return redirect('send_message')
-        #     # else:
-        #     #     error = 'Форма не верна'
-        #
-        # except ValidationError as e:
-        #     s = str(e)
+            logger.warning(e)
+            if el_error != '':
+                name_group_error = Groups.get_name_from_id_group(el_error)
+                if name_group_error is not None:
+                    return JsonResponse(
+                        {'result': 'Произошла ошибка на группе ' + name_group_error +
+                                   ' Повторите попытку, выбрав все группы после нее включительно'})
+            return JsonResponse({'result': 'Произошла ошибка. Рассылка не была совершена полностью. Повторите попытку'})
 
     list_info = Groups.get_data_groups()
-    # if all_info is None: all_info = []
-    #
-    # list_info = list(all_info)
-
-    groupMKA, groupPKO, groupEKO = splitting_into_groups(list_info)
-
-    send_list = []
-
-    if Groups.selected_type_group == Groups.all_type_groups[0]['id']:
-        send_list = groupPKO
-    elif Groups.selected_type_group == Groups.all_type_groups[1]['id']:
-        send_list = groupMKA
-    else:
-        send_list = groupEKO
+    send_list = get_send_list(list_info)
 
     if request.is_ajax():
         return render(request, 'main/groups.html', {'list_info': send_list})
@@ -209,48 +137,16 @@ def send_message(request):
     form = MessageForm()
     data = {
         'form': form,
-        # 'list_info': list_info,
         'list_info': send_list,
         'type_group': Groups.all_type_groups,
         'selected_type': Groups.selected_type_group
-
     }
 
     return render(request, 'main/send_message.html', data)
 
 
-# def update_groups(request):
-#     if request.method == 'POST':
-#         form = GroupsForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#
-#     form = GroupsForm()
-#
-#
-#     data = {
-#         'form': form,
-#     }
-#     return render(request, 'main/send_message.html', data)
-
-def is_unique_id(list_group, id_group):
-    # for i, item in enumerate(list_group):
-    #     a[i] = int(item)
-    # length = len(list_group)
-    # i = 0
-    # while i < length:
-    for i, item in enumerate(list_group):
-        if id_group == item['id_group']:
-            return False, i
-    return True, -1
-
-
 def show_groups(request):
     list_info = Groups.get_data_groups()
-    # if all_info is None:
-    #     all_info = []
-    #
-    # list_info = list(all_info)
 
     if request.method == 'POST' and request.is_ajax():
 
@@ -261,12 +157,14 @@ def show_groups(request):
             if update_groups is not None and 'result' in update_groups:
                 for group in update_groups['result']:
                     if 'message' in group:
-                        if 'id' in group['message']['chat']:
+                        if 'id' and 'title' in group['message']['chat']:
                             js_id = group['message']['chat']['id']
-                            is_unique, index_el = is_unique_id(list_info, js_id)
+                            js_name = group['message']['chat']['title']
+                            is_unique, is_update, index_el = is_unique_id(list_info, js_id, js_name)
 
-                            if 'left_chat_participant' in group['message']:
-                                if index_el is not -1:
+                            if 'left_chat_participant' in group['message'] \
+                                    or 'status' in group and 'status' == 'left':
+                                if index_el != -1:
                                     Groups.delete_recording(js_id)
                                     del list_info[index_el]
 
@@ -276,54 +174,69 @@ def show_groups(request):
                                     Groups.save_recording(js_id, js_name)
                                     list_info.append({'id_group': js_id, 'name': js_name})
 
+                                elif is_update:
+                                    js_name = group['message']['chat']['title']
+                                    Groups.update_recording(js_id, js_name)
+                                    list_info[index_el] = {'id_group': js_id, 'name': js_name}
+
+                    elif 'my_chat_member' in group:
+                        chat_member = ''
+                        if 'new_chat_member' in group['my_chat_member']:
+                            chat_member = 'new_chat_member'
+                        elif 'old_chat_member' in group['my_chat_member']:
+                            chat_member = 'old_chat_member'
+
+                        if chat_member != '':
+                            if 'status' in group['my_chat_member'][chat_member] \
+                                    and group['my_chat_member'][chat_member]['status'] == 'left':
+                                js_id = group['my_chat_member']['chat']['id']
+                                js_name = group['my_chat_member']['chat']['title']
+                                is_unique, is_update, index_el = is_unique_id(list_info, js_id, js_name)
+                                if index_el != -1:
+                                    Groups.delete_recording(js_id)
+                                    del list_info[index_el]
+
         except Exception as e:
-            pass
+            logger.warning(e)
 
-    groupMKA, groupPKO, groupEKO = splitting_into_groups(list_info)
-
-    send_list = []
-
-    if Groups.selected_type_group == Groups.all_type_groups[0]['id']:
-        send_list = groupPKO
-    elif Groups.selected_type_group == Groups.all_type_groups[1]['id']:
-        send_list = groupMKA
-    else:
-        send_list = groupEKO
+    send_list = get_send_list(list_info)
 
     return render(request, 'main/groups.html', {
         'list_info': send_list,
         'selected_type': Groups.selected_type_group
     })
-    # return JsonResponse({
-    #     'list_info': 'ok'})
 
 
-# type = ret['type']
-# list1 = json.loads(ret['data'])
-# form = request.POST
-# i = 0
-# while True:
-#     if 'result[' + str(i) + '][message][chat][id]' in form:
-#         js_id = json.loads(form['result[' + str(i) + '][message][chat][id]'])
-#
-#         if 'result[' + str(i) + '][message][left_chat_participant][id]' in form:
-#             Groups.delete_recording(js_id)
-#
-#         elif js_id is not None and js_id not in list_info:
-#             js_name = form['result[' + str(i) + '][message][chat][title]']
-#             Groups.save_recording(js_id, js_name)
-#
-#         i += 1
-#     else:
-#         break
+# change type groups (MKA, PKO, EKO) #
+def change_group_type(request):
+    type_of_group_ind = request.GET['type_of_group_ind']
 
-# data = {
-#     'list_info': list_info,
-# }
-# return JsonResponse(data)
+    if type_of_group_ind != '':
+        type_of_group_ind = int(type_of_group_ind)
 
+        if type_of_group_ind != "" and 0 <= type_of_group_ind <= 3:
+            Groups.selected_type_group = Groups.all_type_groups[type_of_group_ind]['id']
+            return redirect('send_message')
+
+
+# open modal and get saved messages
 def get_saved_messages(request):
     if request.is_ajax():
         saved_messages = Messages.get_data_messages()
         return JsonResponse({'saved_messages': saved_messages, 'result': 'ok'})
     return JsonResponse({'result': 'error'})
+
+
+# delete selected message in the modal
+def delete_message(request):
+    delete_mess = request.GET['delete_mess']
+
+    if delete_mess == '[]':
+        return JsonResponse({'result': 'error'})
+
+    else:
+        delete_mess = json.loads(delete_mess)
+        for item in delete_mess:
+            Messages.delete_recording(item)
+
+        return JsonResponse({'result': 'ok'})

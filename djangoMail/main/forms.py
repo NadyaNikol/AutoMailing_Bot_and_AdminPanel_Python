@@ -9,11 +9,9 @@ class MessageForm(ModelForm):
 
         widgets = {
             "theme": TextInput(attrs={
-                # 'class': 'input100',
                 'class': 'message_input theme_input'
             }),
             "text": Textarea(attrs={
-                # 'class': 'input100',
                 'class': 'message_input'
             }),
             "image_file": FileInput(attrs={
@@ -27,11 +25,7 @@ class GroupsForm(ModelForm):
         model = Groups
         fields = ['id_group', 'name']
 
-        widgets = {
-            "id_group": TextInput(attrs={
-                'class': 'input100'
-            }),
-            "name": TextInput(attrs={
-                'class': 'input100'
-            }),
-        }
+        # widgets = {
+        #     "id_group": TextInput(),
+        #     "name": TextInput(),
+        # }

@@ -1,6 +1,5 @@
 from .models import UsersMailing
-from django.contrib import auth
-from django.forms import ModelForm, TextInput, DateTimeInput, Textarea, CheckboxInput
+from django.forms import ModelForm, TextInput, CheckboxInput, PasswordInput
 
 
 class EntranceForm(ModelForm):
@@ -10,10 +9,12 @@ class EntranceForm(ModelForm):
 
         widgets = {
             "login": TextInput(attrs={
-                'class': 'input100',
+                'class': 'message_input',
             }),
-            "password": TextInput(attrs={
-                'class': 'input100',
+            "password": PasswordInput(attrs={
+
+                'render_value': True,
+                'class': 'message_input'
             }),
             "remember_me": CheckboxInput(attrs={
                 # 'class': 'contact100-form-checkbox',

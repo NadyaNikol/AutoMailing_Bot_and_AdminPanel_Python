@@ -1,4 +1,8 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class UsersMailing(models.Model):
@@ -14,8 +18,11 @@ class UsersMailing(models.Model):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
-
-    # @staticmethod
-    # def get_user(password, login):
-    #     if password is not None and login is not None:
-    #         return UsersMailing.objects.get(password, login)
+    @staticmethod
+    def get_data_user(password, login):
+        try:
+            user = UsersMailing.objects.get(password=password, login=login)
+            return user
+        except ObjectDoesNotExist:
+            logger.warning("Object user Does Not Exist")
+            return None

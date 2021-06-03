@@ -38,7 +38,6 @@ INSTALLED_APPS = [
 
     'main',
     'entrance',
-    # 'ajaximage',
 ]
 
 MIDDLEWARE = [
@@ -128,12 +127,34 @@ STATICFILES_DIRS = [
     # '/var/www/static/',
 ]
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': '/log.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+    },
+}
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-TOKEN = '1488506326:AAFBL957KpiPMCoDzyuo-u6aDlDeX6JyDMY'
+# TOKEN = '1488506326:AAFBL957KpiPMCoDzyuo-u6aDlDeX6JyDMY'
+TOKEN = '1857755452:AAGBunnkgFs_QzPIVJr9-v7MCwfUMeHXfUo'
+UPDATE_URL = 'https://api.telegram.org/bot'+TOKEN+'/getUpdates'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

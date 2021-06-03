@@ -1,148 +1,28 @@
 {% extends 'main/loyaut.html' %}
 {% load static %}
 
-
-{% block title %}
-    Mailing
-{% endblock %}
-
-{#{% block header %}#}
-{#    <nav class="cd-stretchy-nav">#}
-{#        <a class="cd-nav-trigger" href=""> Menu#}
-{#            <span aria-hidden="true"></span>#}
-{#        </a>#}
-{##}
-{#        <ul>#}
-{#            <li><a href="{% url 'send_message' %}" class="active"><span>Создать рассылку</span></a></li>#}
-{#            <li><a href=""><span>Настройки групп</span></a></li>#}
-{#        </ul>#}
-{##}
-{#        <span aria-hidden="true" class="stretchy-nav-bg"></span>#}
-{#    </nav>#}
-{##}
-{##}
-{##}
-{##}
-{#{% endblock %}#}
-
-{#{% block content %}#}
-{##}
-{#    <form method="post" class="contact_form" name="contact_form"#}
-{#          id="contact" action="." style=" display: flex;#}
-{#    flex-direction: row; flex-wrap: nowrap; margin: 5%;">#}
-{#        {% csrf_token %}#}
-{#        {{ form.non_field_errors }}#}
-{#        <div style="width: 60%;">#}
-{#        <label>Тема:#}
-{#            {{ form.theme }}#}
-{#        </label><br>#}
-{#        <label>Текст сообщения:#}
-{#            {{ form.text }} <br>#}
-{#            {{ all_id }}#}
-{#        </label><br>#}
-{#        <button name="save" type="submit" class="btn btn-success">Сохранить и отправить</button>#}
-{#        <button type="submit" class="btn btn-success">Отправить</button>#}
-{#    </form>#}
-{##}
-{##}
-{#    <form class="contact_form" method="post" name="contact_form">#}
-{#        {% csrf_token %}#}
-{#            <ul>#}
-{#                        <li>#}
-{#                            <h2>Contact Us</h2>#}
-{#                            <span class="required_notification">* Denotes Required Field</span>#}
-{#                        </li>#}
-{#                <li>#}
-{#                    <label for="name">Тема:</label>#}
-{#                    <input type="text" placeholder="John Doe" required/>#}
-{#                    {{ form.theme.label_tag }}#}
-{#                    {{ form.theme }}#}
-{#                    {{ form.theme.errors }}#}
-{#                </li>#}
-{#                    <li>#}
-{#                        <label for="email">Email:</label>#}
-{#                        <input type="email" name="email" placeholder="john_doe@example.com" required />#}
-{#                        <span class="form_hint">Proper format "name@something.com"</span>#}
-{#                    </li>#}
-{#                    <li>#}
-{#                        <label for="website">Website:</label>#}
-{#                        <input type="url" name="website" placeholder="http://johndoe.com" required pattern="(http|https)://.+"/>#}
-{#                        <span class="form_hint">Proper format "http://someaddress.com"</span>#}
-{#                    </li>#}
-{#                <li>#}
-{#                    <label for="message">Сообщение:</label>#}
-{#                    {{ form.text.label_tag }}#}
-{#                    <textarea name="message" cols="60" rows="6" required></textarea>#}
-{#                    {{ form.text }}#}
-{#                    {{ form.text.errors }}#}
-{#                </li>#}
-{#                <li>#}
-{#                        <input type="file" style="height: 30px; width: 350px;" name="image_file" id="image_file">#}
-{#                    {{ form.image_file.label_tag }}#}
-{#                    {{ form.image_file }}#}
-{#                    <p id="error_file" hidden style="color: red;">Выберите файл нужного формата</p>#}
-{#                    <input type="checkbox" id="save" value="Сохранить">#}
-{#                    <button class="submit" type="submit" id="send_message">Отправить</button>#}
-{#                                        <input type="submit" class="submit" value="OK">#}
-{#                </li>#}
-{#            </ul>#}
-{#    </form>#}
-{##}
-{##}
-{#        </div>#}
-{##}
-{#        <div style=" width: 40%;" class="btn-group" id="div_groups">#}
-{##}
-{#            {% include 'main/groups.html' %}#}
-{##}
-{#        </div>#}
-{##}
-{#        <button class="btn btn-success" id="update_groups"> Обновить группы</button>#}
-{##}
-{#    </form>#}
-{#        </ol>#}
-{##}
-{#    import collections#}
-{#Foo = collections.namedtuple('Foo', ['id', 'created_date', 'number_of_clicks'])#}
-{##}
-{#def test(request):#}
-{#    # check if form data is posted#}
-{#    if request.method == 'POST':#}
-{#        # simply return a string that shows the IDs of selected items#}
-{#        return http.HttpResponse('<br />'.join(request.POST.getlist('choices')))#}
-{##}
-{#    else:#}
-{#        items = [Foo(1,1,1),#}
-{#                 Foo(2,2,2),#}
-{#                 Foo(3,3,3)]#}
-{##}
-{#        t = loader.get_template('test.html')#}
-{#        c = RequestContext(request, {#}
-{#            'list': items,#}
-{#            'host': 'me.com',#}
-{#            })#}
-{##}
-{#    return http.HttpResponse(t.render(c))#}
-{##}
-{#{% endblock %}#}
-
-
+{% block title %} Отправка сообщения {% endblock %}
 
 {% block content %}
 
     <form method="post" name="contact_form" class="form_contact"
-          id="contact" action="." style="display: flex; justify-content: center; margin: 2% 0;">
+          id="contact" action="." style="position: relative; display: flex; justify-content: center; margin: 2% 0;">
         <div id="message_main">
-            <img src="{% static 'main/images/step3.jpg' %}" width="75%">
+            <img src="{% static 'main/images/step.jpg' %}" width="75%" alt="">
 
             <div>
                 <span style="display: flex;">
                 {{ form.theme.label_tag }}
-                     <img style="width: 5%; height: 20px; margin-left: 60%;" src="{% static 'main/images/arrow.png' %}">
-                    <button type="button" class="open_modal" style="width: 30%;">
+
+                    <button type="button" class="open_modal" style="width: 45%; margin-left: auto;">
+                        <img style="width: 9%; margin-bottom: 2px;"
+                             src="{% static 'main/images/left_up_arrow.png' %}" alt="">
                         Выбрать из сохраненных
-                    </button>
-                    </span>
+                        <img style="width: 9%;"
+                             src="{% static 'main/images/right_down_arrow.png' %}">
+                           </button>
+                </span>
+
                 {{ form.theme }}
             </div>
             <div>
@@ -152,14 +32,14 @@
             <div>
                 {{ form.image_file }}
                 <div id="error_file_div"></div>
-                <span id="error_file">Выберите файл нужного формата (*.jpeg; *.jpg; *.png; *.svg)</span>
+                <span id="error_file">Выберите файл нужного формата (*.jpeg; *.jpg; *.png;)</span>
             </div>
             <br>
             <div id="save_submit">
-                {#                justify-content: space-between;#}
-                Сохранить<label class="checkbox_save">&nbsp;<input class="form-check-input me-1" type="checkbox"
-                                                                   id="save"><span></span></label>
-                {#                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#}
+                Сохранить<label style="margin-right: 10%;" class="checkbox_save">&nbsp;<input
+                    class="form-check-input me-1" type="checkbox"
+                    id="save-mess-checkbox"><span></span></label>
+
                 <button class="submit" type="submit" id="send_message">Отправить</button>
             </div>
 
@@ -168,47 +48,54 @@
 
         <div id="group_main">
             <div id="group_main2">
-                <select id="select_group">
-                    {% for type in type_group %}
-                        {% if selected_type == type.id %}
-                            <option value="{{ type.id }}" selected>{{ type.name }}</option>
+                <div style="display: flex;">
+                    <select id="select_group">
+                        {% for type in type_group %}
+                            {% if selected_type == type.id %}
+                                <option value="{{ type.id }}" selected>{{ type.name }}</option>
 
-                        {% else %}
-                            <option value="{{ type.id }}">{{ type.name }}</option>
-                        {% endif %}
-                        {#                    <option>ПКО</option>#}
-                        {#                    <option>МКА</option>#}
-                        {#                    <option>ЕКО</option>#}
-                    {% endfor %}
-                </select>
+                            {% else %}
+                                <option value="{{ type.id }}">{{ type.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <div style="display: flex; margin-top: 4%;">
+                        Выбрать все<label class="checkbox_save">&nbsp;<input class="form-check-input me-1"
+                                                                             type="checkbox"
+                                                                             id="choose-all-checkbox"><span></span></label>
+                    </div>
+                </div>
 
-                {% include 'main/groups.html' %}
+                <div id="update_group_div">
+                    {% include 'main/groups.html' %}
+                </div>
             </div>
             <button class="submit" id="update_groups">
                 Обновить группы
             </button>
         </div>
-
-        {#        <button id="update_groups"> Обновить группы</button>#}
-
     </form>
-
+<div class="wait_icon" style=" position: absolute; top:10%; left: 50%;">
+        <img style="width: 80px;" src="{% static 'main/images/wait.gif' %}" alt=""></div>
 
     <!-- Modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="font-size: 12px;">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" >Сохраненные сообщения</h5>
-{#                    <button type="button" class="close">#}
-{#                        <span aria-hidden="true">&times;</span>#}
-{#                    </button>#}
+                <div class="modal-header" style="display: flex;">
+                    <h5 class="modal-title">Сохраненные сообщения</h5>
+                    <div style="display: flex; font-size: 16px; margin-right: 5%;">Выбрать все<label
+                            class="checkbox_save">&nbsp;
+                        <input class="form-check-input me-1" type="checkbox"
+                               id="choose-all-checkbox-modal"><span></span></label>
+                    </div>
                 </div>
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" id="delete-mess-modal">
+                        <img style="width: 60%;" src="{% static 'main/images/delete_mess.jpg' %}">
+                    </button>
                 </div>
             </div>
         </div>
@@ -226,110 +113,181 @@
 
         $(document).ready(function () {
             $('#error_file').hide();
-            var selected_groups = [];
+            $('.wait_icon').hide();
+            const selected_groups = [];
 
-
-            {#$('#myModal').modal('toggle')#}
-            $('.open_modal').click(function (e){
+            {# delete all selected message in the modal #}
+            $('#delete-mess-modal').click(function (e) {
                 e.preventDefault();
+                e.stopPropagation();
 
-                 $.ajax({
-                     {#type: $(this).attr('method'),#}
-                     {#type: "POST",#}
-                     {#datatype: "JSON",#}
-                      url: '{% url 'get_saved_messages' %}',
-                     {#data: {"type_of_group_ind": $(this).val()},#}
-                     success: function (data) {
+                if (confirm('Вы точно хотите удалить данные сообщения?')) {
 
-                         if (data.result === 'ok') {
+                    const mess_id = [];
+                    let id;
 
-                             {#alert();#}
-                             {#alert(data.saved_messages['theme']);#}
+                    $('input.choose-one-mess-checkbox:checked').each(function (i) {
+                        id = $(this).attr("id").split('_');
+                        mess_id[i] = id[1];
+                    });
 
-                             var modal = $('.modal');
-                             var modal_body = $('.modal-body');
+                    $.ajax({
+                        datatype: "JSON",
+                        url: '{% url 'delete_message' %}',
+                        data: {"delete_mess": JSON.stringify(mess_id)},
+                        success: function (data) {
 
-                             var saved_mess = data.saved_messages;
+                            if (data.result === 'ok') {
+                                alert('Сообщения успешно удалены');
+                                $('.modal').modal('hide');
+                            } else
+                                alert('Выберите сообщения');
 
-                             saved_mess.forEach(el=> {
-                                 {#alert(el['text']));#}
+                        }
+                    });
 
-                                 modal_body.append(
-                                     "<div> " +
-                                        "<button id = 'mess_" + el['id'] + "'>" +
-                                            "<h4>" + el['theme'] + "</h4>"
-                                            + el['text'] + ((el['image_file']==='')?'++':'--') +
-                                        "</button>" +
-                                     "</div>" +
-                                     "<hr/>")
-                             });
-                             modal.modal('show');
-                         } else {
-                             alert('Произошла ошибка. Повторите вашу попытку')
-                         }
+                }
+            });
 
-                     }
-                 });
+            {# choose all checkboxes in the modal #}
+            $('#choose-all-checkbox-modal').change(function () {
+
+                var isChecked = $(this).prop('checked');
+
+                $('input.choose-one-mess-checkbox').prop('checked', isChecked);
 
             });
 
-            $('.modal-body').on('click', 'button', function (e) {
-                e.preventDefault();
-                const button = $(this);
-                var id = button.attr('id');
-                 var d = document.getElementById(id);
-                 var s = d.getElementsByTagName('h4');
-
-                 var theme = s[0].innerHTML;
-
-                  var th = document.getElementById('id_theme');
-
-                  th.value = theme;
-
-                  $('.modal').modal('hide');
-
-                {#alert(s[0].innerHTML);#}
-
-            });
-
-            $('#select_group').change(function (e) {
+            {# filling the modal window with data from the database #}
+            $('.open_modal').click(function (e) {
                 e.preventDefault();
 
-                {#alert($(this).val())#}
                 $.ajax({
-                    {#type: $(this).attr('method'),#}
-                    type: "GET",
-                    datatype: "JSON",
-                    url: $(this).attr('action'),
-                    data: {"type_of_group_ind": $(this).val()},
-                    success: function () {
-                        {#alert("ajax answer");#}
-                        $('#div_groups').html('').load(
-                            "{% url 'show_groups' %}");
-                    }
-                    {#success: function (data) {#}
-                    {#    if (data.result === 'ok') {#}
-                    {#        alert('Рассылка успешно завершена');#}
-                    {#        location.reload();#}
-                    {#    } else {#}
-                    {#        alert(data.result);#}
-                    {#    }#}
+                    url: '{% url 'get_saved_messages' %}',
+                    success: function (data) {
 
+                        if (data.result === 'ok') {
+
+                            const modal = $('.modal');
+                            const modal_body = $('.modal-body');
+                            modal_body.html('');
+
+                            const saved_mess = data.saved_messages;
+
+                            saved_mess.forEach(el => {
+
+                                const img_src_arrow_modal = '{% static 'main/images/arrow_modal_down.png'%}';
+                                {#const img_src_file_image = (el['image_file'] === '') ? '' : '{% static 'main/images/file_image.png'%}';#}
+                                var hint = 'Нажмите для выбора этого сообщения';
+
+                                {#"<img style=' width: 18px;' src='" + img_src_file_image + "'>" +#}
+
+                                const html =
+                                    "<div style=' display: flex;'>" +
+                                    "<div style='width: 85%; text-align: justify; position: relative; margin-right: 3%;'>" +
+                                    "<button class='theme-modal' style='text-align: justify; margin-bottom: 5px;' id = 'mess_" + el['id'] + "'>" +
+                                    "<span class='tooltiptext'>" + hint + "</span>" +
+                                    "<h6>" + el['theme'] + "</h6>" +
+                                    "</button>" +
+
+                                    "<div class='modal-text' id = 'text_" + el['id'] + "'>" + el['text'] + "</div>" +
+                                    "<a style='width: 100%;' class='open-modal-text' href='#' id = 'link_" + el['id'] + "'>" +
+                                    "<img src='" + img_src_arrow_modal + "' style='width: 10px; margin: auto 50% ; opacity: 0.5;'  alt='...'> " +
+                                    "</a>" +
+                                    "</div>" +
+                                    "<div style='display: flex; width: 7%; align-items: baseline;'>" +
+
+                                    "<label class='checkbox_save' style='margin-left: auto;'><input class='form-check-input me-1 choose-one-mess-checkbox' type='checkbox'" +
+                                    " id = 'check_" + el['id'] + "'><span></span>" +
+                                    "</label>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "<hr style='margin: 7px 0 7px 0; padding: 0;'/>";
+
+                                modal_body.append(html);
+
+                            });
+
+                            modal.modal('show');
+                        } else {
+                            alert('Произошла ошибка. Повторите вашу попытку')
+                        }
+
+                    }
                 });
 
             });
 
-            {#$(document).ready(function () {#}
+            {# show all text one message in the modal#}
+            $('.modal-body').on('click', 'a', function (e) {
 
-            {#$.ajaxSetup({#}
-            {#    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},#}
+                e.preventDefault();
+                e.stopPropagation();
+                {#$(this).toggleClass('active');#}
+                const id_a = $(this).attr("id").split('_');
+                const img = $(this).find('img');
+                let id = id_a[1];
+                if (id !== '') {
+                    let text = $('#text_' + id);
+                    if (text !== '') {
+                        if (text.hasClass('opener')) {
+                            img.prop('src', '{% static 'main/images/arrow_modal_down.png'%}');
+                            $(text).removeClass('opener');
+                        } else {
+                            img.prop('src', '{% static 'main/images/arrow_modal_up.png'%}');
+                            $(text).addClass('opener');
+                        }
+                    }
+                }
+            });
+
+            {# return selected theme, text and image to form #}
+            $('.modal-body').on('click', 'button', function (e) {
+                e.preventDefault();
+                const button = $(this);
+                let id = button.attr('id').split('_');
+
+                const theme = button.find('h6').text();
+                id = id[1];
+                if (id !== '') {
+                    let text = $('#text_' + id);
+                    if (text !== '') {
+                        $('#id_theme').val(theme);
+                        $('#id_text').text(text.text());
+                    }
+                }
 
 
+                $('.modal').modal('hide');
+
+            });
+
+            {# change type groups (MKA, PKO, EKO) #}
+            $('#select_group').change(function (e) {
+                e.preventDefault();
+
+                $('#choose-all-checkbox').prop('checked', false);
+                $.ajax({
+                    type: "GET",
+                    datatype: "JSON",
+                    {#url: $(this).attr('action'),#}
+                    url: '{% url 'change_group_type' %}',
+                    data: {"type_of_group_ind": $(this).val()},
+                    success: function () {
+                        {#alert("ajax answer");#}
+                        $('#update_group_div').html('').load(
+                            "{% url 'show_groups' %}");
+                    }
+                });
+
+            });
+
+            {# error output when the wrong file type is selected #}
             $('#id_image_file').change(function (e) {
                 e.preventDefault();
 
-                var format = $(this)[0].files[0].name.split('.').pop()
-                var regex = new RegExp("(jpeg|jpg|png|svg)");
+                const format = $(this)[0].files[0].name.split('.').pop();
+                const regex = new RegExp("(jpeg|jpg|png)");
                 if (!(regex.test(format))) {
                     $('#error_file').show();
                     $('#send_message').attr('disabled', 'disabled');
@@ -339,21 +297,23 @@
                 }
             })
 
-            var formData = new FormData();
+            {# submit form message #}
             $("#contact").submit(function (e) {
+
                 e.preventDefault();
                 e.stopPropagation();
 
-                var isSave = false;
-                if ($('#save').prop("checked"))
-                    isSave = true;
-                {#var file = ("#id_image_file").files[0];#}
-                {# formdata.append("image", file);#}
-                {# console.log(("#id_image_file").file);#}
+                $(this).css('opacity', '0.5');
+                $('.wait_icon').show();
 
-                var form = $(this).serializeArray();
+                let isSave = false;
+                if ($('#save-mess-checkbox').prop("checked"))
+                    isSave = true;
+
+                let form = $(this).serializeArray();
                 form = JSON.stringify(form);
 
+                const formData = new FormData();
                 formData.append('image', $('#id_image_file')[0].files[0]);
                 formData.append('form', form);
                 formData.append('selected_groups', JSON.stringify(selected_groups));
@@ -362,20 +322,15 @@
 
                 $.ajax({
                     type: $(this).attr('method'),
-                    {#url: 'http://127.0.0.1:8000/main/',#}
-                    {#url: '{% url 'send_message' %}',#}
                     url: $(this).attr('action'),
-                    {#data_type:'JSON',#}
                     data: formData,
-                    {#data: {#}
-                    {#'data_form': formdata,#}
-                    {#'selected_groups': JSON.stringify(selected_groups),#}
-                    {#csrfmiddlewaretoken: '{{ csrf_token }}'#}
-
                     processData: false,
                     contentType: false,
                     enctype: 'multipart/form-data',
                     success: function (data) {
+                        $('#contact').css('opacity', '1');
+                        $('.wait_icon').hide();
+
                         if (data.result === 'ok') {
                             alert('Рассылка успешно завершена');
                             location.reload();
@@ -386,133 +341,79 @@
                 });
             });
 
+            {# update groups handler button click #}
             $("#update_groups").click(function (e) {
                 e.preventDefault();
-                {#e.stopPropagation();#}
+                $('#choose-all-checkbox').prop('checked', false);
+                $('#contact').css('opacity', '0.5');
+                $('.wait_icon').show();
                 $.ajax({
                     type: 'POST',
-                    url: 'https://api.telegram.org/bot1488506326:AAFBL957KpiPMCoDzyuo-u6aDlDeX6JyDMY/getUpdates',
-                    {#dataType: "JSON",#}
+                    {#url: 'https://api.telegram.org/bot1488506326:AAFBL957KpiPMCoDzyuo-u6aDlDeX6JyDMY/getUpdates',#}
+                    url: 'https://api.telegram.org/bot1857755452:AAGBunnkgFs_QzPIVJr9-v7MCwfUMeHXfUo/getUpdates',
                     success: function (data) {
-                        {#отправляем данные формы вместе с обновлением страницы (данные введенные не потеряются)#}
-                        {#const form = $('#contact').serializeArray();#}
-
-                        {#$('#div_groups').html('').load(#}
-                        {#            "{% url 'show_groups' %}");#}
-
                         $.ajax({
                             type: 'POST',
-                            {#url: 'http://127.0.0.1:8000/main/',#}
                             url: '{% url 'show_groups' %}',
-                            {#dataType: 'text',#}
-                            {#cache: false,#}
                             datatype: "JSON",
-                            {#data:data,#}
                             data: {'data': JSON.stringify(data), csrfmiddlewaretoken: '{{ csrf_token }}'},
-                            {#csrfmiddlewaretoken: '{{ csrf_token }}',#}
                             success: function (data) {
 
-                                {#history.pushState(null, null, '{% url 'send_message' %}');#}
-                                {#$('#div_groups').reload();#}
-                                $('#div_groups').html('').load(
+                            $('#contact').css('opacity', '1');
+                            $('.wait_icon').hide();
+
+                                $('#update_group_div').html('').load(
                                     "{% url 'show_groups' %}");
-                                {#alert('ssss');#}
-                                {#window.location = window.location.href;#}
-                                {#window.location.assign(document.URL);#}
-                                {#alert(data['list_info'][0]['id_group'])#}
-                                {#var group_div = document.getElementById('div_groups')#}
-                                {#group_div.innerHTML = ''#}
-                                {#data['list_info'].forEach(#}
-                                {#el=> document.getElementById(el['id_group']).innerHTML = el['name']#}
-                                {#el=> alert(el['id_group'])#}
-                                {#el => function (el) {#}
-                                {#    alert(el)#}
-                                {#group_div.append(#}
-                                {#    '<div style="position: relative;height: 100px; float: left;">' +#}
-                                {#    '<button name="' + el['id_group'] + '" class="btn_check_group">' +#}
-                                {#    '<div style="position: absolute; top: 0; left: 0; width: 100px;">' +#}
-                                {#    '<img src="/static/main/images/pr.png" alt="..."/>' +#}
-                                {#    '</div>' +#}
-                                {#    '<div id="' + el['id_group'] + '"' +#}
-                                {#    'style="position: absolute; top: 40%; left: 1%; width: 100px; font-size: 1.5em; font-weight: bolder">' +#}
-                                {#    'el["name"]' +#}
-                                {#    '</div>' +#}
-                                {#    '</button>' +#}
-                                {#    '</div>')#}
-                                {#document.getElementById(el['id_group']).innerHTML = el['name']#}
-
                             }
-
                         });
                     }
                 });
             })
 
-
-            {#for (var i = 0; i < btn.length; i++) {#}
-            {#    btn[i].onclick = function () {#}
-            {#alert(this.id)#}
-            {##}
-            {#        var img = $(this).find('img');#}
-            {##}
-            {#        if (img.attr('src') === '/static/main/images/pr.png') {#}
-            {#            img.attr('src', '/static/main/images/G41.png');#}
-            {#            selected_groups.push(this.id);#}
-            {#        } else {#}
-            {#            img.attr('src', '/static/main/images/pr.png');#}
-            {#            const index = selected_groups.indexOf(this.id);#}
-            {#            if (index > -1) {#}
-            {#                selected_groups.splice(index, 1);#}
-            {#            }#}
-            {##}
-            {#        }#}
-            {##}
-            {#var img = this.getElementsByTagName('img');#}
-            {##}
-            {#if(img.attr('src')=="{% static 'main/images/pr.png' %}")#}
-            {#    alert(img);#}
-            {##}
-            {#if (!(selected_groups.indexOf(this.id) !== -1))#}
-            {#    selected_groups.push(this.id);#}
-            {#alert(selected_groups);#}
-            {#    };#}
-
-
-            $('#div_groups').on('click', 'button', function (e) {
+            {#choose one group#}
+            $('#update_group_div').on('click', 'button', function (e) {
                 e.preventDefault();
 
                 const button = $(this);
+                const img = $(this).find('img');
 
-                if (((button.css("background-image")).indexOf('circle.png')) !== -1) {
-                    button.css("background-image", `url("` + window.location.origin + `/static/main/images/circle_check.png")`);
+                if (button.css("transform") === 'none') {
+                    button.css("transform", 'scale(1.1)');
+                    img.show();
                     selected_groups.push(this.id);
                 } else {
-                    button.css("background-image", `url("` + window.location.origin + `/static/main/images/circle.png")`);
+                    button.css("transform", 'none');
+                    img.hide();
                     const index = selected_groups.indexOf(this.id);
                     if (index > -1) {
                         selected_groups.splice(index, 1);
                     }
                 }
-
-
-                {#const img = $(this).find('img');#}
-                {##}
-                {##}
-                {#if (img.attr('src') === '/static/main/images/pr.png') {#}
-                {#    img.attr('src', '/static/main/images/G41.png');#}
-                {#    selected_groups.push(this.id);#}
-
-                {#else {#}
-                {#    img.attr('src', '/static/main/images/pr.png');#}
-                {#    const index = selected_groups.indexOf(this.id);#}
-                {#    if (index > -1) {#}
-                {#        selected_groups.splice(index, 1);#}
-                {#    }#}
-
-                {#alert(selected_groups);#}
             });
 
+            {# checkbox in group for choose all groups of the same type#}
+            $('#choose-all-checkbox').change(function () {
 
+                const isChecked = $(this).prop('checked');
+
+                $('#div_groups').children().each(function (i, e) {
+                    const button = $(this);
+                    const img = $(this).find('img');
+
+                    if (isChecked) {
+                        button.css("transform", 'scale(1.1)');
+                        img.show();
+                        selected_groups.push(this.id);
+                    } else {
+                        button.css("transform", 'none');
+                        img.hide();
+                        const index = selected_groups.indexOf(this.id);
+                        if (index > -1) {
+                            selected_groups.splice(index, 1);
+                        }
+                    }
+                });
+            });
         });
 
     </script>

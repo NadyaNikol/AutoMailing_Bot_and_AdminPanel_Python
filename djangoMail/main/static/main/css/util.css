@@ -2705,16 +2705,16 @@
 	align-items: center;
 }
 
-.flex-sb-m {
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -moz-box;
-	display: -ms-flexbox;
-	display: flex;
-	justify-content: space-between;
-	-ms-align-items: center;
-	align-items: center;
-}
+/*.flex-sb-m {*/
+/*	display: -webkit-box;*/
+/*	display: -webkit-flex;*/
+/*	display: -moz-box;*/
+/*	display: -ms-flexbox;*/
+/*	display: flex;*/
+/*	justify-content: space-between;*/
+/*	-ms-align-items: center;*/
+/*	align-items: center;*/
+/*}*/
 
 /* ------------------------------------ */
 .flex-col-l {
